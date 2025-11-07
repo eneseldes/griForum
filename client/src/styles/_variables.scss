@@ -1,0 +1,44 @@
+// 🎨 Color palette
+:root {
+  --text-primary-color: #242424;
+  --text-secondary-color: #6B7280;
+  --bg-primary-color: #FFF;
+  --bg-seconday-color: #F5F5F5;
+  --button-bg-color: #4F46E5;
+}
+
+.dark {
+  --text-primary-color: #FFF;
+  --text-secondary-color: #F5F5F5;
+  --bg-primary-color: #181818;
+  --bg-secondary-color: #242424;
+  --button-bg-color: #21005D;
+}
+
+// Spacing scale
+$space-sm: 8px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 10%;
+
+// Typography
+$font-family-base: 'Inter', sans-serif;
+$font-size-base: 16px;
+$font-size-md: 18px;
+$font-size-lg: 24px;
+$font-size-xl: 36px;
+
+// Border & Shadow
+$radius-md: 8px;
+$shadow-light: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+// Breakpoints
+$breakpoints: (
+  'xs': 480px,   // küçük telefon
+  'sm': 640px,   // telefon
+  'md': 768px,   // tablet
+  'lg': 1024px,  // küçük laptop
+  'xl': 1280px,  // büyük ekran
+  '2xl': 1536px  // ekstra geniş
+);
+
