@@ -18,6 +18,10 @@ app.use(express.json());
 // Connect DB
 await connectDB();
 
+import User from "./models/User.js"
+const user = await User.find().limit(5);
+console.log(user)
+
 // Route mounts
 app.use('/api/admin', adminRouter);
 app.use('/api/auth', authRouter);

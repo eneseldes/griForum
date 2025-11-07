@@ -1,6 +1,6 @@
 import "../models/Comment.js";
 
 // Controller kodları buraya
-export const getFirst5Comment = async (req, res) => {
+export const placeHolder = async (req, res) => {
   res.send("Deneme!");
 };
