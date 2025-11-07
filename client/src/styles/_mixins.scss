@@ -1,5 +1,4 @@
 @import "./variables";
-@use 'sass:map';
 
 @mixin respond($key) {
   $size: map.get($breakpoints, $key);

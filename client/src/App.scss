@@ -1,5 +1,7 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+@use 'sass:map';
+
+@import "./styles/_variables";
+@import "./styles/_globals";
+@import "./styles/_layouts";
+@import "./styles/_mixins";
+@import "./styles/_typography";

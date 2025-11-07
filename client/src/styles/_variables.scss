@@ -3,7 +3,7 @@
   --text-primary-color: #242424;
   --text-secondary-color: #6B7280;
   --bg-primary-color: #FFF;
-  --bg-seconday-color: #F5F5F5;
+  --bg-secondary-color: #F5F5F5;
   --button-bg-color: #4F46E5;
 }
 
@@ -14,6 +14,13 @@
   --bg-secondary-color: #242424;
   --button-bg-color: #21005D;
 }
+
+// SCSS variables for use in SCSS files
+$color-text: var(--text-primary-color);
+$color-text-secondary: var(--text-secondary-color);
+$color-bg: var(--bg-primary-color);
+$color-bg-secondary: var(--bg-secondary-color);
+$color-primary: var(--button-bg-color);
 
 // Spacing scale
 $space-sm: 8px;

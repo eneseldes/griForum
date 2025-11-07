@@ -10,17 +10,17 @@ body {
 
 .title {
   font-size: $font-size-xl;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: $space-md;
-  color: $color-primary;
+  color: $color-text;
 
-  &--large { font-size: 2rem; }
-  &--small { font-size: 1.25rem; }
+  &--large { font-size: 3rem; }
+  &--small { font-size: 1.75rem; }
 }
 
 .subtitle {
   font-size: $font-size-lg;
   font-weight: 500;
-  color: darken($color-text, 10%);
+  color: $color-text-secondary;
   margin-bottom: $space-sm;
 }
