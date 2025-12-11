@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/Navbar/Navbar';
+import Footer from './components/Footer/Footer';
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 import CreatePostPage from "./pages/CreatePostPage/CreatePostPage";
 import EditPostPage from "./pages/EditPostPage/EditPostPage";
@@ -9,24 +10,14 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import PostDetailPage from "./pages/PostDetailPage/PostDetailPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import TestBackend from "./pages/TestBackend/TestBackend";
 
 import "./App.scss";
+import LikeButton from './components/LikeButton/LikeButton';
 
 function App() {
   return (
     <BrowserRouter>
-
-    <div className="container">
-    <p>asdasdasd</p>
-    <div className="title title--large">asdasd asdasda</div>
-    <div className="title title--small">asdasd asdasd</div>
-
-    </div>
-
-
-
-
-
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -37,7 +28,9 @@ function App() {
         <Route path="/edit-post" element={<EditPostPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/admin-panel" element={<AdminPanel />} />
+        <Route path="/test" element={<TestBackend />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }
