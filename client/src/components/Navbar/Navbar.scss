@@ -1,0 +1,85 @@
+@import "../../styles/variables";
+
+.show-menu {
+  right: 0 !important;
+}
+/* yapılacaklar 
+    3 çizgiye başta none var 
+    media ile belli seviyeye gelince dışarı taşsın onu getir 
+*/
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10% 10px 10%;
+
+  &__right {
+    display: flex;
+    column-gap: 30px;
+    ul {
+      display: flex;
+      list-style: none;
+      column-gap: 30px;
+    }
+
+    button {
+      opacity: 0;
+      @media (max-width: 800px) {
+        opacity: 1;
+      }
+    }
+
+    &__getStarted {
+      background-color: $color-primary;
+      border-radius: $radius-md;
+      a {
+        padding: 10px;
+        color: white;
+      }
+    }
+
+    &__menu {
+
+      display: flex;
+      column-gap: 30px;
+      
+      
+      //   position: absolute;
+      //   right: -100%;
+      //   top: 500px;
+
+      @media (max-width: 800px) {
+        position: absolute;
+        right: -100%;
+      } 
+
+      &.__show-menu {
+        @media (max-width: 800px) {
+          display: flex;
+          flex-direction: column;
+          right: 0;
+          top: 0;
+          gap: 10px;
+          width: 40%;
+          height: 100vh;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.266);
+          padding: 2rem;
+
+
+          ul {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        }
+
+        
+        // position: static; // relative left right etkilemez absolute için base sağlar ama absolute diye dışardan müdahele etmeden önce base hali static
+        // right: 0%;
+        // top: 0px;
+        // position: absolute;
+        // right: -100%;
+        // top: 500px;
+      }
+    }
+  }
+}

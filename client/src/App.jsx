@@ -16,12 +16,6 @@ function App() {
   return (
     <BrowserRouter>
 
-    <div className="container">
-    <p>asdasdasd</p>
-    <div className="title title--large">asdasd asdasda</div>
-    <div className="title title--small">asdasd asdasd</div>
-
-    </div>
 
 
 
