@@ -5,6 +5,7 @@
   --bg-primary-color: #FFF;
   --bg-secondary-color: #F5F5F5;
   --button-bg-color: #4F46E5;
+  --category-text-color: #F59E0B;
 }
 
 .dark {
@@ -21,6 +22,7 @@ $color-text-secondary: var(--text-secondary-color);
 $color-bg: var(--bg-primary-color);
 $color-bg-secondary: var(--bg-secondary-color);
 $color-primary: var(--button-bg-color);
+$color-category: var(--category-text-color);
 
 // Spacing scale
 $space-sm: 8px;

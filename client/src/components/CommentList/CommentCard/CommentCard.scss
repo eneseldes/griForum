@@ -1,0 +1,56 @@
+@import "../../../styles/_variables.scss";
+@import "../../../styles/_typography.scss";
+@import "../../../styles/_layouts.scss";
+@import "../../../styles/_mixins.scss";
+
+.comment-card {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  grid-template-areas:
+    "avatar meta"
+    "text text";
+  column-gap: 16px;
+  row-gap: 8px;
+  margin-bottom: 24px;
+
+  &__avatar {
+    grid-area: avatar;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f0f0f0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__meta {
+    grid-area: meta;
+  }
+
+  &__username {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    margin-bottom: 4px;
+    color: $color-text;
+  }
+
+  &__date {
+    font-size: 14px;
+    color: $color-text-secondary;
+  }
+
+  &__text {
+    grid-area: text;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+    color: $color-text;
+  }
+}

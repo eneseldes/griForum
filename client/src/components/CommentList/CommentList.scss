@@ -1,0 +1,37 @@
+@import "../../styles/_variables.scss";
+@import "../../styles/_typography.scss";
+@import "../../styles/_layouts.scss";
+@import "../../styles/_mixins.scss";
+
+.comment-list {
+  margin-top: 48px;
+
+  &__header {
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    margin-bottom: 16px;
+    padding-left: 16px;
+    border-left: 4px solid #4169e1;
+    color: $color-text;
+  }
+
+  &__login-link {
+    font-size: 16px;
+    color: #5856d6;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__items {
+    margin-top: 32px;
+  }
+}
