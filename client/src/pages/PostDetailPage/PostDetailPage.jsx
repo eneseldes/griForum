@@ -1,9 +1,9 @@
 import "./PostDetailPage.scss";
-import Navbar from
+
 
 function PostDetailPage() {
-  return <div className="post-detail-page">
-    
+  return 
+  <div className="post-detail-page">
   </div>;
 }
 
