@@ -1,0 +1,40 @@
+@import "../../styles/variables";
+
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  column-gap: $space-sm;
+  padding: 0.2rem 0.8rem;
+  border-radius: $radius-md;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.2s;
+
+  &__icons {
+    &__icon {
+      font-size: 2rem;
+      position: absolute;
+      transform: scale(0);
+      transition: transform 0.4s;
+    }
+
+    &__placeholder-icon {
+        position: static;
+        opacity: 0;
+    }
+
+    .active-icon {
+        transform: scale(1) !important;
+    }
+  }
+
+  &:hover:not(.loading) {
+    background-color: $color-bg-secondary;
+  }
+
+  &.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
