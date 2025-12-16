@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { CATEGORIES_ARRAY } from "../constants/categories.js";
 const { Schema } = mongoose;
 
 const postSchema = new Schema(
@@ -14,6 +15,7 @@ const postSchema = new Schema(
     category: {
       type: String,
       required: true,
+      enum: CATEGORIES_ARRAY,
     },
     author: {
       type: Schema.Types.ObjectId,

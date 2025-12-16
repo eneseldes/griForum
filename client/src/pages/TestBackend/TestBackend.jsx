@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { CATEGORIES_ARRAY } from '../../constants/categories.js';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
@@ -441,14 +442,17 @@ const TestBackend = () => {
               style={styles.textarea}
               required
             />
-            <input
-              type="text"
-              placeholder="Kategori"
+            <select
               value={newPost.category}
               onChange={(e) => setNewPost({ ...newPost, category: e.target.value })}
               style={styles.input}
               required
-            />
+            >
+              <option value="">Kategori Seçin</option>
+              {CATEGORIES_ARRAY.map(category => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
             <button type="submit" style={styles.submitButton}>Post Ekle</button>
           </form>
 
@@ -587,13 +591,17 @@ const TestBackend = () => {
                 style={styles.textarea}
                 required
               />
-              <input
-                type="text"
+              <select
                 value={editPost.category}
                 onChange={(e) => setEditPost({ ...editPost, category: e.target.value })}
                 style={styles.input}
                 required
-              />
+              >
+                <option value="">Kategori Seçin</option>
+                {CATEGORIES_ARRAY.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
               <div style={styles.modalActions}>
                 <button type="submit" style={styles.submitButton}>Kaydet</button>
                 <button type="button" onClick={() => setEditPost(null)} style={styles.cancelButton}>İptal</button>

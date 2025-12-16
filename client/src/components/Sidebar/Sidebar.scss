@@ -1,0 +1,52 @@
+@import "../../styles/variables";
+
+.sidebar {
+    &__list {
+        display: grid;
+        row-gap: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    &__categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+
+        &__item {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: $radius-md;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            opacity: 0.5;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            // Category specific colors
+            &--coding {
+                background-color: $category-coding;
+            }
+
+            &--technology {
+                background-color: $category-technology;
+            }
+
+            &--life-style {
+                background-color: $category-life-style;
+            }
+
+            &--travel {
+                background-color: $category-travel;
+            }
+
+            &--web-development {
+                background-color: $category-web-development;
+            }
+        }
+    }
+}

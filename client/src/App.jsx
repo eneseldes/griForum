@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/Navbar/Navbar';
@@ -13,7 +14,6 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import TestBackend from "./pages/TestBackend/TestBackend";
 
 import "./App.scss";
-import LikeButton from './components/LikeButton/LikeButton';
 
 function App() {
   return (
