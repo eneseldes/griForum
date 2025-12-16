@@ -1,8 +1,12 @@
 import express from "express";
-import { placeHolder } from "../controllers/adminController.js";
+
+import { getAllUsers, updateUserRole } from "../controllers/adminController.js";
+import { adminMiddleware } from "../middlewares/adminMiddleware.js"
+import { authMiddleware } from "../middlewares/authMiddleware.js"
 
 const router = express.Router();
 
-// Route'lar buraya...
+router.get("/users", authMiddleware, adminMiddleware, getAllUsers);
+router.post("/users/:userId/role", authMiddleware, adminMiddleware, updateUserRole);
 
 export default router;
