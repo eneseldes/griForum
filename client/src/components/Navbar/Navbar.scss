@@ -25,6 +25,7 @@
       opacity: 0;
       @media (max-width: 800px) {
         opacity: 1;
+        z-index: 99;
       }
     }
 
@@ -63,7 +64,8 @@
           height: 100vh;
           box-shadow: 0 0 5px rgba(0, 0, 0, 0.266);
           padding: 2rem;
-
+          background-color: white;
+          
 
           ul {
           display: flex;

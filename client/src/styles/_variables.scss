@@ -6,6 +6,13 @@
   --bg-secondary-color: #F5F5F5;
   --button-bg-color: #4F46E5;
   --category-text-color: #F59E0B;
+  
+  // Category colors
+  --category-coding: #3B82F6;
+  --category-technology: #8B5CF6;
+  --category-life-style: #10B981;
+  --category-travel: #F59E0B;
+  --category-web-development: #EF4444;
 }
 
 .dark {
@@ -23,6 +30,22 @@ $color-bg: var(--bg-primary-color);
 $color-bg-secondary: var(--bg-secondary-color);
 $color-primary: var(--button-bg-color);
 $color-category: var(--category-text-color);
+
+// Category colors
+$category-coding: var(--category-coding);
+$category-technology: var(--category-technology);
+$category-life-style: var(--category-life-style);
+$category-travel: var(--category-travel);
+$category-web-development: var(--category-web-development);
+
+// Category color map
+$category-colors: (
+  "Coding": $category-coding,
+  "Technology": $category-technology,
+  "Life Style": $category-life-style,
+  "Travel": $category-travel,
+  "Web Development": $category-web-development,
+);
 
 // Spacing scale
 $space-sm: 8px;
