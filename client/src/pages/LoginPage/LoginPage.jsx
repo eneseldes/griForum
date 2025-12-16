@@ -2,6 +2,8 @@ import "./LoginPage.scss";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import CustomButton from "../../components/CustomButton/CustomButton";
+
 function LoginPage() {
   return (
     <div className="main">
@@ -47,9 +49,13 @@ function LoginPage() {
         {/*
             login buton ve signupa atlama
           */}
-        <button type="submit" className="login-button">
+        {/* <button type="submit" className="login-button">
           Login
-        </button>
+        </button> */}
+        <CustomButton
+          label="Login" 
+          path="/auth/login" 
+        />
       </div>
       <p>
         Don't have an account?{" "}

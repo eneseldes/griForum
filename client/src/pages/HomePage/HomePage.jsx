@@ -1,6 +1,6 @@
 import "./HomePage.scss";
 import PostList from "../../components/PostList/PostList.jsx";
-
+import CustomButton from "../../components/CustomButton/CustomButton.jsx";
 const DUMMY_POSTS = [
   {
     id: 1,
@@ -41,7 +41,13 @@ function HomePage() {
         <div className="landing-content">
           <h1>Write,Share and Inspire - Because Every Story Deserves an Audience</h1>
           <p>Read and write amazing stories from people around the world</p>
-          <button className="landing-button">Write a Story</button>
+
+          {/* <button className="landing-button">Write a Story</button> */}
+
+          <CustomButton
+          label={"Write a Story"}
+          path={""}
+          ></CustomButton>
         </div>
         
       </div>
