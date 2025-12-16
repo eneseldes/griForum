@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { FaBars } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,7 +17,7 @@ function Navbar() {
       </div>
 
       <div className="navbar__right">
-        <div className={`navbar__right__menu ${menuOpen ? " __show-menu" : ""}`}>
+        <div className={`navbar__right__menu ${menuOpen ? "__show-menu" : ""}`}>
           <ul>
             <li>
               <a href="">
@@ -57,7 +58,7 @@ function Navbar() {
           className="navbar__right__hamburger"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <FaBars />
+          {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
     </div>

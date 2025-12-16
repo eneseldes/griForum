@@ -37,6 +37,15 @@ const DUMMY_POSTS = [
 function HomePage() {
   return (
     <div className="home-page">
+      <div className="landing-page">
+        <div className="landing-content">
+          <h1>Write,Share and Inspire - Because Every Story Deserves an Audience</h1>
+          <p>Read and write amazing stories from people around the world</p>
+          <button className="landing-button">Write a Story</button>
+        </div>
+        
+      </div>
+      
       <h1>Recent Posts</h1>
       <PostList posts={DUMMY_POSTS} />
     </div>

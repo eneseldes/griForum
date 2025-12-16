@@ -1,0 +1,49 @@
+@import "../../styles/variables";
+.landing-page{
+    background-color: $color-bg-secondary;
+    width: 100%;
+    padding: 100px 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    .landing-content{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        row-gap: 10px;
+        width: 900px;
+
+        h1{
+            font-size: 42px; 
+            font-weight: 800; 
+        }
+        p{
+            font-size: 18px;
+
+        }
+        .landing-button{
+
+            background-color: $color-primary;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 20px;
+            border-radius: 5px;
+            width: 200px;
+            transition: all 0.3s ease-in-out;
+            &:hover{
+                background-color: #3d35c9;
+            }
+            &:active{
+                transform: scale(0.95);
+            }
+        }
+    }
+    
+}

@@ -1,0 +1,85 @@
+@import "../../styles/variables";
+
+.main {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  padding: 50px;
+
+  .email-section {
+    .email-form {
+      display: flex;
+      flex-direction: column;
+
+      .input-icon {
+        position: absolute;
+        right: 60px;
+        top: 45%;
+      }
+      input{
+        outline: none; 
+        border-radius: 5px;
+        padding: 10px;
+        border: none;
+        border-bottom: solid 2px black;
+        background-color: $color-bg-secondary;
+      }
+    }
+  }
+
+  .password-section {
+    display: flex;
+    flex-direction: column;
+
+    .password-form {
+      display: flex;
+      flex-direction: column;
+
+      .pass-icon {
+        position: absolute;
+        right: 60px;
+        top: 56%;
+      }
+      input{
+        outline: none; 
+        border-radius: 5px;
+        padding: 10px;
+        border: none;
+        border-bottom: solid 2px black;
+        background-color: $color-bg-secondary;
+      }
+    }
+
+    .forgot-password {
+      display: flex;
+      justify-content: end;
+    }
+  }
+
+  .button-section {
+    .login-button {
+      width: 100%;
+      height: 50px;
+      background-color: black;
+      color: white;
+      font-size: 19px;
+      border-radius: 5px;
+      transition: all 0.3s ease-in-out;
+      transition: transform 0.1s ease-in-out;
+      border: none;
+
+      &:hover{
+        background-color: rgb(52, 51, 51);
+      }
+      &:active{
+        transform: scale(0.95);
+      }
+    }
+  }
+  
+  .bold-text{
+    color: black;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
