@@ -4,7 +4,13 @@
   display: flex;
   flex-direction: column;
   row-gap: 20px;
-  padding: 50px;
+ 
+  width: 800px;
+  margin: auto;
+
+  @media (max-width:800px) {
+    width: 400px;
+  }
 
   .email-section {
     .email-form {
