@@ -1,0 +1,38 @@
+@import "../../../styles/variables";
+
+.sidebar-item {
+  transition: 0.4s;
+
+  &__category {
+    display: inline-block;
+    background-color: $color-category;
+    opacity: 0.4;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    color: white;
+    font-size: 0.8rem;
+  }
+
+  &__title {
+    font-size: $font-size-md;
+    font-weight: 600;
+    color: $color-text;
+  }
+
+  &__kunye {
+    display: flex;
+    align-items: center;
+    column-gap: 0.2rem;
+    color: $color-text-secondary;
+    font-weight: 600;
+
+    &__author {
+        color: $color-text;
+    }
+  }
+
+  &:hover {
+    padding: 0.8rem;
+    background-color: $color-bg-secondary;
+  }
+}
