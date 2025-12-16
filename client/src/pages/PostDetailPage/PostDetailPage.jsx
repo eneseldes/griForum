@@ -3,6 +3,7 @@ import CommentList from "../../components/CommentList/CommentList.jsx";
 import CommentForm from "../../components/CommentList/CommentForm/CommentForm.jsx";
 import LikeButton from "../../components/LikeButton/LikeButton.jsx";
 import { FaRegClock } from "react-icons/fa6";
+import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 
 
 const post = {
@@ -94,13 +95,7 @@ function PostDetailPage() {
             </section>
           </main>
 
-          {/* Sidebar: Sonradan eklenicek*/}
-          <aside className="sidebar">
-            <h3 className="section-title">Most Popular</h3>
-            <div className="sidebar__placeholder">Coming soon…</div>
-            <h3 className="section-title">Categories</h3>
-            <div className="sidebar__placeholder">Coming soon…</div>
-          </aside>
+          <Sidebar />
         </div>
       </div>
     </div>
