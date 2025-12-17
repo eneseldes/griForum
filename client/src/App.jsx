@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/Navbar/Navbar';
@@ -16,6 +16,24 @@ import TestBackend from "./pages/TestBackend/TestBackend";
 import "./App.scss";
 
 function App() {
+  // Test kullanıcısı için basit login state
+  const [isTestLoggedIn, setIsTestLoggedIn] = useState(true);
+
+  // Test token'ını localStorage'da yönet
+  useEffect(() => {
+    const TEST_TOKEN_VALUE = "TEST_USER_TOKEN";
+
+    if (isTestLoggedIn) {
+      localStorage.setItem("token", TEST_TOKEN_VALUE);
+    } else {
+      localStorage.removeItem("token");
+    }
+  }, [isTestLoggedIn]);
+
+  const handleToggleAuth = () => {
+    setIsTestLoggedIn((prev) => !prev);
+  };
+
   return (
     <BrowserRouter>
 
@@ -32,6 +50,28 @@ function App() {
         <Route path="/test" element={<TestBackend />} />
       </Routes>
       <Footer />
+
+      {/* Ekranın sol altındaki küçük test login/logout butonu */}
+      <button
+        type="button"
+        onClick={handleToggleAuth}
+        style={{
+          position: "fixed",
+          bottom: "16px",
+          left: "16px",
+          padding: "6px 10px",
+          fontSize: "11px",
+          borderRadius: "999px",
+          border: "none",
+          backgroundColor: "#222",
+          color: "#fff",
+          opacity: 0.7,
+          cursor: "pointer",
+          zIndex: 9999,
+        }}
+      >
+        {isTestLoggedIn ? "Çıkış yap (Test)" : "Giriş yap (Test)"}
+      </button>
     </BrowserRouter>
   );
 }
