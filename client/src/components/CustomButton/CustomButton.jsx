@@ -4,17 +4,26 @@ import "./CustomButton.scss";
 const API_BASE_URL = 'http://localhost:3000/api';
 
 function CustomButton({
-  label, 
-  path, 
-  method = 'GET', 
-  body = null, 
-  onSuccess = null, 
+  label,
+  path,
+  method = "GET",
+  body = null,
+  onSuccess = null,
   onError = null,
-  requireAuth = false
+  requireAuth = false,
+  onClick = null,
+  disabled = false,
 }) {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
+    // Eğer dışarıdan onClick verildiyse, API isteği yapma, sadece onu çalıştır
+    if (onClick) {
+      if (disabled || loading) return;
+      onClick();
+      return;
+    }
+
     if (!path) {
       console.error('CustomButton: path prop is required for API request');
       return;
@@ -79,7 +88,7 @@ function CustomButton({
 
   return (
     <div 
-      className={`custom-button ${loading ? 'loading' : ''}`}
+      className={`custom-button ${loading ? 'loading' : ''} ${disabled ? 'disabled' : ''}`}
       onClick={handleClick}
     >
       {loading ? 'Loading...' : label}
