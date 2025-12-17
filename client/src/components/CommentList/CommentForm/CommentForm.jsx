@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
+import CustomButton from "../../CustomButton/CustomButton.jsx";
 import "./CommentForm.scss";
 
 function CommentForm() {
@@ -30,9 +31,10 @@ function CommentForm() {
             rows={6}
           />
         </div>
-        <button type="submit" className="btn-send">
-          <FaPaperPlane /> Send Comment
-        </button>
+        <CustomButton
+          type="submit"
+          label={<><FaPaperPlane /> Send Comment</>}
+        />
       </form>
     </div>
   );

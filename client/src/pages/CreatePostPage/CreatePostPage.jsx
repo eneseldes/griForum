@@ -1,15 +1,15 @@
 import { FaPaperPlane, FaImage, FaPalette, FaCode, FaAlignLeft, FaLink } from "react-icons/fa";
 import "./CreatePostPage.scss";
+import CustomButton from "../../components/CustomButton/CustomButton.jsx";
 
 function CreatePostPage() {
   return (
     <div className="create-post-page">
       <div className="container">
         <div className="page-actions">
-          <button type="button" className="btn btn-primary">
-            <FaPaperPlane />
-            Publish
-          </button>
+          <CustomButton
+            label={<><FaPaperPlane /> Publish</>}
+            />
         </div>
 
         <div className="title-wrap">
