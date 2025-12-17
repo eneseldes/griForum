@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Navbar from './components/Navbar/Navbar';
-import Footer from './components/Footer/Footer';
+import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 import CreatePostPage from "./pages/CreatePostPage/CreatePostPage";
 import EditPostPage from "./pages/EditPostPage/EditPostPage";
@@ -15,28 +15,72 @@ import TestBackend from "./pages/TestBackend/TestBackend";
 
 import "./App.scss";
 
+const API_BASE_URL = "http://localhost:3000/api";
+
 function App() {
   // Test kullanıcısı için basit login state
-  const [isTestLoggedIn, setIsTestLoggedIn] = useState(true);
+  const [isTestLoggedIn, setIsTestLoggedIn] = useState(false);
+  const [testAuthLoading, setTestAuthLoading] = useState(false);
 
-  // Test token'ını localStorage'da yönet
+  // Sayfa ilk açıldığında localStorage'da token varsa logged in kabul et
   useEffect(() => {
-    const TEST_TOKEN_VALUE = "TEST_USER_TOKEN";
-
-    if (isTestLoggedIn) {
-      localStorage.setItem("token", TEST_TOKEN_VALUE);
-    } else {
-      localStorage.removeItem("token");
+    const existingToken = localStorage.getItem("token");
+    if (existingToken) {
+      setIsTestLoggedIn(true);
     }
-  }, [isTestLoggedIn]);
+  }, []);
+
+  // Test kullanıcısı ile login ol
+  const loginWithTestUser = async () => {
+    try {
+      setTestAuthLoading(true);
+
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: "test@test.com",
+          password: "test123",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Test login hatası:", data);
+        alert(data?.message || "Test kullanıcısı ile giriş yapılamadı.");
+        return;
+      }
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        setIsTestLoggedIn(true);
+      } else {
+        alert("Sunucudan token alınamadı.");
+      }
+    } catch (error) {
+      console.error("Test login isteği hatası:", error);
+      alert("Test kullanıcısı ile giriş yapılırken bir hata oluştu.");
+    } finally {
+      setTestAuthLoading(false);
+    }
+  };
 
   const handleToggleAuth = () => {
-    setIsTestLoggedIn((prev) => !prev);
+    if (isTestLoggedIn) {
+      // Çıkış
+      localStorage.removeItem("token");
+      setIsTestLoggedIn(false);
+    } else {
+      // Giriş
+      loginWithTestUser();
+    }
   };
 
   return (
     <BrowserRouter>
-
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -51,7 +95,7 @@ function App() {
       </Routes>
       <Footer />
 
-      {/* Ekranın sol altındaki küçük test login/logout butonu */}
+      {/* Ekranın sol altındaki küçük test giriş/çıkış butonu */}
       <button
         type="button"
         onClick={handleToggleAuth}
@@ -70,7 +114,11 @@ function App() {
           zIndex: 9999,
         }}
       >
-        {isTestLoggedIn ? "Çıkış yap (Test)" : "Giriş yap (Test)"}
+        {testAuthLoading
+          ? "İşleniyor..."
+          : isTestLoggedIn
+          ? "Çıkış yap (Test)"
+          : "Giriş yap (Test)"}
       </button>
     </BrowserRouter>
   );
