@@ -1,4 +1,6 @@
 import "./CommentCard.scss";
+import "../../LikeButton/LikeButton.jsx";
+import LikeButton from "../../LikeButton/LikeButton.jsx";
 
 function CommentCard({ comment = {} }) {
   return (
@@ -11,7 +13,8 @@ function CommentCard({ comment = {} }) {
         <span className="comment-card__date">{comment.date}</span>
       </div>
       <p className="comment-card__text">{comment.text}</p>
-    </div>
+      <LikeButton likes={comment.likes} />
+      </div>
   );
 }
 
