@@ -1,4 +1,5 @@
 import "./PostCard.scss";
+import { Link } from "react-router-dom";
 
 function PostCard({ post = {} }) {
   return (
@@ -12,12 +13,10 @@ function PostCard({ post = {} }) {
           <h2 className="title--small">{post.title}</h2>
           <p className="post-card__info__excerpt">{post.excerpt}</p>
           <p className="post-card__info__link">
-            <a href={post.link}>Read more</a>
+            <Link to={post.link}>Read more</Link>
           </p>
         </div>
-        <div className="post-date">
-          {post.date}
-        </div>
+        <div className="post-date">{post.date}</div>
       </div>
     </>
   );
