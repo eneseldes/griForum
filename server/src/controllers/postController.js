@@ -274,12 +274,24 @@ export const likePost = async (req, res) => {
       (id) => id && id.toString() === userIdString
     );
 
+    const isLiking = likedIndex < 0; // Eğer likedIndex < 0 ise, beğeniyor demektir
+
     if (likedIndex >= 0) {
       // Unlike - beğeniyi kaldır
       post.likes.splice(likedIndex, 1);
+      
+      // User'dan likedPosts array'inden de kaldır
+      await User.findByIdAndUpdate(userId, {
+        $pull: { likedPosts: post._id }
+      });
     } else {
       // Like - beğeniyi ekle
       post.likes.push(userId);
+      
+      // User'a likedPosts array'ine ekle
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { likedPosts: post._id }
+      });
     }
 
     // Mongoose array değişikliğini işaretle
@@ -287,7 +299,7 @@ export const likePost = async (req, res) => {
     await post.save();
 
     res.status(200).json({
-      liked: likedIndex < 0,
+      liked: isLiking,
       likeCount: post.likes.length,
     });
   } catch (err) {
@@ -312,14 +324,26 @@ export const savePost = async (req, res) => {
 
     const userId = req.user.id;
 
-    const alreadySaved = post.savedBy.includes(userId);
+    const alreadySaved = post.savedBy.some(
+      (id) => id && id.toString() === userId.toString()
+    );
 
     if (alreadySaved) {
       //unsave
-      post.savedBy = post.savedBy.filter((id) => id.toString() !== userId);
+      post.savedBy = post.savedBy.filter((id) => id.toString() !== userId.toString());
+      
+      // User'dan savedPosts array'inden de kaldır
+      await User.findByIdAndUpdate(userId, {
+        $pull: { savedPosts: post._id }
+      });
     } else {
       //save
       post.savedBy.push(userId);
+      
+      // User'a savedPosts array'ine ekle
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { savedPosts: post._id }
+      });
     }
 
     await post.save();

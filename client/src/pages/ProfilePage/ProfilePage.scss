@@ -1,0 +1,93 @@
+@import "../../styles/variables";
+@import "../../styles/typography";
+
+.profile-page {
+	min-height: 100vh;
+	padding: 2rem 0;
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 1.25rem;
+	}
+
+	&__title {
+		font-size: 2.5rem;
+		font-weight: 700;
+		color: $color-text-secondary;
+		margin-bottom: 2rem;
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
+	}
+}
+
+.profile-section {
+	background-color: $color-bg;
+	border-radius: 14px;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+	padding: 2rem;
+
+	&__title {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: $color-text;
+		margin-bottom: 1.5rem;
+	}
+
+	&__empty {
+		color: $color-text-secondary;
+		font-style: italic;
+		text-align: center;
+		padding: 2rem 0;
+	}
+}
+
+.profile-form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+
+	&__field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	&__label {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: $color-text;
+	}
+
+	&__input {
+		padding: 0.75rem 1rem;
+		border-radius: 8px;
+		font-size: 1rem;
+		color: $color-text;
+		background-color: $color-bg-secondary;
+		border: 1px solid rgba(0,0,0,0.1);
+		outline: none;
+		transition: border-color 0.2s ease, background-color 0.2s ease;
+
+		&:focus:not(:disabled) {
+			border-color: $color-primary;
+			background-color: $color-bg;
+		}
+
+		&:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
+	}
+
+	&__actions {
+		display: flex;
+		justify-content: flex-end;
+		margin-top: 0.5rem;
+	}
+}
+
