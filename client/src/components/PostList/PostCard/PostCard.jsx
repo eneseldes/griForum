@@ -1,12 +1,24 @@
 import "./PostCard.scss";
 import { Link } from "react-router-dom";
 
+const CATEGORY_IMAGES = {
+  Coding: "/coding.png",
+  Technology: "/tekno.png",
+  Travel: "/travel.png",
+  "Web Development": "/coding.png",
+  "Life Style": "/travel.png",
+
+};
+
+
 function PostCard({ post = {} }) {
+  const categoryImage = CATEGORY_IMAGES[post.category];
+
   return (
     <>
       <div className="post-card">
         <div className="post-card__image">
-          <img src={post.image} alt={post.title} />
+          <img src={categoryImage} alt={post.title} />
         </div>
         <div className="post-card__info">
           <p className="post-card__info__category">{post.category}</p>

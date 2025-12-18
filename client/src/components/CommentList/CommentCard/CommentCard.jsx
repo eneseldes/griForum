@@ -6,7 +6,7 @@ function CommentCard({ comment = {} }) {
   return (
     <div className="comment-card">
       <div className="comment-card__avatar">
-        <img src={comment.avatar} alt={comment.username} />
+        <img src="https://i.pravatar.cc/150?img=2" alt={comment.username} />
       </div>
       <div className="comment-card__meta">
         <h4 className="comment-card__username">{comment.username}</h4>

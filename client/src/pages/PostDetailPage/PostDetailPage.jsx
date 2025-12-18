@@ -1,13 +1,12 @@
 import "./PostDetailPage.scss";
 import CommentList from "../../components/CommentList/CommentList.jsx";
-import CommentForm from "../../components/CommentList/CommentForm/CommentForm.jsx";
 import LikeButton from "../../components/LikeButton/LikeButton.jsx";
 import { FaRegClock } from "react-icons/fa6";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
 import { usePostDetail } from "../../hooks/usePostDetail";
 
 function PostDetailPage() {
-  const { post, comments, loading, error } = usePostDetail();
+  const { post, comments, setComments, loading, error, postId } = usePostDetail();
 
   if (loading && !post) {
     return <p>Loading post...</p>;
@@ -46,7 +45,7 @@ function PostDetailPage() {
             <div className="post-meta">
               <img
                 className="post-meta__avatar"
-                src={post.image}
+                src={post.authorAvatar || "https://i.pravatar.cc/150?img=69"}
                 alt={post.title}
               />
               <div className="post-meta__info">
@@ -70,9 +69,14 @@ function PostDetailPage() {
             </div>
 
             <section className="post-comments">
-              <CommentForm />
               {loading && <p>Loading comments...</p>}
-              <CommentList comments={comments} />
+              <CommentList
+                comments={comments}
+                postId={postId}
+                onAddComment={(newComment) =>
+                  setComments((prev) => [newComment, ...prev])
+                }
+              />
             </section>
           </main>
 

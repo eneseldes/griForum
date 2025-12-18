@@ -1,17 +1,23 @@
 import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import CustomButton from "../../CustomButton/CustomButton.jsx";
+import useCreateComment from "../../../hooks/useCreateComment";
 import "./CommentForm.scss";
 
-function CommentForm() {
+function CommentForm({ postId, onAddComment }) {
   const [comment, setComment] = useState("");
+  const { create, submitting, error, resetError } = useCreateComment(postId);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    if (e && typeof e.preventDefault === "function") e.preventDefault();
     if (!comment.trim()) return;
-    // TODO: Backend API call here
-    console.log("Submitting comment:", comment);
-    setComment("");
+    try {
+      const mapped = await create(comment);
+      if (mapped && onAddComment) onAddComment(mapped);
+      setComment("");
+    } catch (_) {
+      // error state handled by hook
+    }
   };
 
   return (
@@ -25,15 +31,22 @@ function CommentForm() {
           <textarea
             id="comment-textarea"
             className="form-textarea"
-            placeholder="Search Anything"
+            placeholder="Write your comment..."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={6}
+            disabled={submitting}
           />
         </div>
+        {error && <p className="form-error">{error}</p>}
         <CustomButton
-          type="submit"
-          label={<><FaPaperPlane /> Send Comment</>}
+          onClick={handleSubmit}
+          disabled={submitting || !comment.trim()}
+          label={
+            <>
+              <FaPaperPlane /> {submitting ? "Sending..." : "Send Comment"}
+            </>
+          }
         />
       </form>
     </div>
