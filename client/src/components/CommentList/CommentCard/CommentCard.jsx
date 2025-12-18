@@ -1,8 +1,24 @@
+import { useState, useEffect } from "react";
 import "./CommentCard.scss";
 import "../../LikeButton/LikeButton.jsx";
 import LikeButton from "../../LikeButton/LikeButton.jsx";
+import { getUserIdFromToken } from "../../../services/api";
 
 function CommentCard({ comment = {} }) {
+  const [hasUserLiked, setHasUserLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
+  useEffect(() => {
+    if (comment) {
+      const userId = getUserIdFromToken();
+      const isLiked = userId && Array.isArray(comment.likes) && comment.likes.some(
+        (likeId) => likeId.toString() === userId
+      );
+      setHasUserLiked(isLiked || false);
+      setLikeCount(comment.likesCount || (Array.isArray(comment.likes) ? comment.likes.length : 0));
+    }
+  }, [comment]);
+
   return (
     <div className="comment-card">
       <div className="comment-card__avatar">
@@ -13,8 +29,17 @@ function CommentCard({ comment = {} }) {
         <span className="comment-card__date">{comment.date}</span>
       </div>
       <p className="comment-card__text">{comment.text}</p>
-      <LikeButton likes={comment.likes} />
-      </div>
+      <LikeButton
+        type="comment"
+        id={comment.id}
+        hasUserLiked={hasUserLiked}
+        likeCount={likeCount}
+        onLikeChange={(newLiked, newCount) => {
+          setHasUserLiked(newLiked);
+          setLikeCount(newCount);
+        }}
+      />
+    </div>
   );
 }
 

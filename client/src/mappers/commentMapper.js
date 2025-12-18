@@ -12,6 +12,8 @@ export const mapCommentFromApi = (rawComment) => {
       rawComment.author?.avatar ||
       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
     date: createdAt ? createdAt.toLocaleDateString() : "",
+    likes: Array.isArray(rawComment.likes) ? rawComment.likes : [],
+    likesCount: Array.isArray(rawComment.likes) ? rawComment.likes.length : 0,
     raw: rawComment,
   };
 };

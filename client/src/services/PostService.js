@@ -27,6 +27,11 @@ export const PostService = {
     // DELETE /api/posts/:id (auth)
     return api.delete(`/posts/${postId}`, { withAuth });
   },
+
+  async likePost(postId) {
+    // POST /api/posts/:postId/like (auth)
+    return api.post(`/posts/${postId}/like`, null, { withAuth });
+  },
 };
 
 export default PostService;

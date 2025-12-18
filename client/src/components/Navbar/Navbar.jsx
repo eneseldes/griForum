@@ -1,12 +1,35 @@
 import "./Navbar.scss";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { FaBars } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
+import { getUserIdFromToken } from "../../services/api";
 
 function Navbar() {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleGetStarted = (e) => {
+    e.preventDefault();
+    const userId = getUserIdFromToken();
+    if (userId) {
+      navigate("/create-post");
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleWrite = (e) => {
+    e.preventDefault();
+    const userId = getUserIdFromToken();
+    if (userId) {
+      navigate("/create-post");
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     // containera padding atanmış unutma onu kullanabilrisin title ksımı için
@@ -38,15 +61,15 @@ function Navbar() {
               <a href="">About</a>
             </li>
             <li>
-              <a href="">Write</a>
+              <a href="" onClick={handleWrite}>Write</a>
             </li>
             <li>
-              <a href="">Sign In</a>
+              <a href="/login">Sign In</a>
             </li>
           </ul>
 
           <div className="navbar__right__getStarted">
-            <a href="">Get Started</a>
+            <a href="" onClick={handleGetStarted}>Get Started</a>
           </div>
 
         </div>  

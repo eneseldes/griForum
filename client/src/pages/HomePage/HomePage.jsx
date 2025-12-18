@@ -1,10 +1,22 @@
+import { useNavigate } from "react-router-dom";
 import "./HomePage.scss";
 import PostList from "../../components/PostList/PostList.jsx";
 import CustomButton from "../../components/CustomButton/CustomButton.jsx";
 import { usePosts } from "../../hooks/usePosts";
+import { getUserIdFromToken } from "../../services/api";
 
 function HomePage() {
+  const navigate = useNavigate();
   const { posts, loading, error } = usePosts();
+
+  const handleWriteStory = () => {
+    const userId = getUserIdFromToken();
+    if (userId) {
+      navigate("/create-post");
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="home-page">
@@ -13,7 +25,10 @@ function HomePage() {
           <h1>Write,Share and Inspire - Because Every Story Deserves an Audience</h1>
           <p>Read and write amazing stories from people around the world</p>
 
-          <CustomButton label={"Write a Story"} path={""} />
+          <CustomButton 
+            label={"Write a Story"} 
+            onClick={handleWriteStory}
+          />
         </div>
       </div>
 

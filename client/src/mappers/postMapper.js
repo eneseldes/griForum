@@ -1,3 +1,5 @@
+import { editorJsToPlainText } from "../utils/editorUtils";
+
 const API_BASE_URL = "http://localhost:3000";
 
 const getImageUrl = (images) => {
@@ -19,22 +21,24 @@ export const mapPostFromApi = (rawPost) => {
 
   const createdAt = rawPost.createdAt ? new Date(rawPost.createdAt) : null;
 
+  // Editor.js content'ini plain text'e çevir ve excerpt oluştur
+  const plainText = editorJsToPlainText(rawPost.content);
+  const excerpt = editorJsToPlainText(rawPost.content, 150);
+
   return {
     id: rawPost._id,
     title: rawPost.title,
     content: rawPost.content,
     category: rawPost.category,
     image: getImageUrl(rawPost.images),
-    // UI için kısa özet
-    excerpt:
-      rawPost.content?.length > 160
-        ? `${rawPost.content.slice(0, 157)}...`
-        : rawPost.content,
+    // UI için kısa özet (ilk 150 kelime)
+    excerpt: excerpt || "No content available",
     date: createdAt ? createdAt.toLocaleDateString() : "",
     // Post detail route'u ile eşleşecek şekilde
     link: `/post/${rawPost._id}`,
     authorName: rawPost.author?.username || "Unknown",
     likesCount: Array.isArray(rawPost.likes) ? rawPost.likes.length : 0,
+    likes: Array.isArray(rawPost.likes) ? rawPost.likes : [],
     commentsCount: Array.isArray(rawPost.comments) ? rawPost.comments.length : 0,
     raw: rawPost,
   };

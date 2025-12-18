@@ -5,6 +5,25 @@ const getAuthToken = () => {
   return localStorage.getItem("token");
 };
 
+// JWT token'dan user ID'yi decode eder
+export const getUserIdFromToken = () => {
+  const token = getAuthToken();
+  if (!token) return null;
+  
+  try {
+    // JWT token formatı: header.payload.signature
+    const payload = token.split('.')[1];
+    if (!payload) return null;
+    
+    // Base64 decode
+    const decoded = JSON.parse(atob(payload));
+    return decoded.id || null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
+
 const buildHeaders = (extraHeaders = {}, withAuth = false) => {
   const headers = {
     "Content-Type": "application/json",
@@ -29,7 +48,8 @@ async function request(path, options = {}) {
     headers: buildHeaders(extraHeaders, withAuth),
   };
 
-  if (body !== undefined) {
+  // body null veya undefined ise gönderme (POST/PUT/PATCH için boş body göndermek backend'de sorun yaratabilir)
+  if (body !== undefined && body !== null) {
     config.body = JSON.stringify(body);
   }
 
@@ -39,12 +59,40 @@ async function request(path, options = {}) {
   const contentType = response.headers.get("content-type");
   const isJson = contentType && contentType.includes("application/json");
 
-  const data = isJson ? await response.json() : await response.text();
+  let data;
+  try {
+    if (isJson) {
+      const text = await response.text();
+      // Boş response veya "null" string kontrolü
+      if (!text || text.trim() === "" || text.trim() === "null") {
+        data = null;
+      } else {
+        try {
+          data = JSON.parse(text);
+        } catch (parseError) {
+          // JSON parse hatası durumunda
+          console.error("JSON parse error:", parseError, "Text:", text);
+          data = { message: "Invalid JSON response", raw: text };
+        }
+      }
+    } else {
+      const text = await response.text();
+      data = text || null;
+    }
+  } catch (error) {
+    console.error("Error reading response:", error);
+    data = null;
+  }
 
   if (!response.ok) {
-    const error = new Error(
-      (data && data.message) || `API request failed with status ${response.status}`
-    );
+    const errorMessage = 
+      (data && typeof data === 'object' && data.message) 
+        ? data.message 
+        : (data && typeof data === 'string' 
+          ? data 
+          : `API request failed with status ${response.status}`);
+    
+    const error = new Error(errorMessage);
     error.status = response.status;
     error.data = data;
     throw error;

@@ -254,26 +254,45 @@ export const likePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
 
-    if (!post) return res.status(404).json({ message: "Gönderi bulunamadı" });
+    if (!post) {
+      return res.status(404).json({ message: "Gönderi bulunamadı" });
+    }
 
-    const userId = req.user.id;
-    const alreadyLiked = post.likes.includes(userId);
+    const userId = req.user._id || req.user.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Yetkilendirme gerekli." });
+    }
 
-    if (alreadyLiked) {
-      //unlike
-      post.likes = post.likes.filter((id) => id.toString() !== userId);
+    // post.likes undefined veya null olabilir, kontrol et
+    if (!Array.isArray(post.likes)) {
+      post.likes = [];
+    }
+
+    // ObjectId karşılaştırması için toString() kullan
+    const userIdString = userId.toString();
+    const likedIndex = post.likes.findIndex(
+      (id) => id && id.toString() === userIdString
+    );
+
+    if (likedIndex >= 0) {
+      // Unlike - beğeniyi kaldır
+      post.likes.splice(likedIndex, 1);
     } else {
-      //like
+      // Like - beğeniyi ekle
       post.likes.push(userId);
     }
 
+    // Mongoose array değişikliğini işaretle
+    post.markModified('likes');
     await post.save();
 
     res.status(200).json({
-      liked: !alreadyLiked,
+      liked: likedIndex < 0,
       likeCount: post.likes.length,
     });
   } catch (err) {
+    console.error("Error liking post:", err);
+    console.error("Error stack:", err.stack);
     res.status(500).json({
       message: "Beğeni işlemi yapılamadı",
       error: err.message,

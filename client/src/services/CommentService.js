@@ -22,6 +22,11 @@ export const CommentService = {
     // DELETE /api/comments/:id
     return api.delete(`/comments/${commentId}`, { withAuth });
   },
+
+  async likeComment(commentId) {
+    // POST /api/comments/:commentId/like (auth)
+    return api.post(`/comments/${commentId}/like`, null, { withAuth });
+  },
 };
 
 export default CommentService;
