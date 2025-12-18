@@ -7,6 +7,7 @@ export const mapCommentFromApi = (rawComment) => {
     id: rawComment._id,
     text: rawComment.text,
     username: rawComment.author?.username || "Unknown",
+    authorId: rawComment.author?._id || rawComment.author?.id || rawComment.author,
     avatar:
       rawComment.author?.profilePicture ||
       rawComment.author?.avatar ||

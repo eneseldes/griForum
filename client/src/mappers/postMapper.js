@@ -37,6 +37,7 @@ export const mapPostFromApi = (rawPost) => {
     // Post detail route'u ile eşleşecek şekilde
     link: `/post/${rawPost._id}`,
     authorName: rawPost.author?.username || "Unknown",
+    authorId: rawPost.author?._id || rawPost.author?.id || rawPost.author,
     likesCount: Array.isArray(rawPost.likes) ? rawPost.likes.length : 0,
     likes: Array.isArray(rawPost.likes) ? rawPost.likes : [],
     commentsCount: Array.isArray(rawPost.comments) ? rawPost.comments.length : 0,

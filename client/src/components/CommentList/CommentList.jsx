@@ -2,8 +2,14 @@ import "./CommentList.scss";
 import CommentCard from "./CommentCard/CommentCard.jsx";
 import CommentForm from "./CommentForm/CommentForm.jsx";
 
-function CommentList({ comments = [], postId, onAddComment }) {
+function CommentList({ comments = [], postId, onAddComment, onDeleteComment }) {
   const isLoggedIn = !!localStorage.getItem("token");
+
+  const handleDeleteComment = (commentId) => {
+    if (onDeleteComment) {
+      onDeleteComment(commentId);
+    }
+  };
 
   return (
     <div className="comment-list">
@@ -23,7 +29,11 @@ function CommentList({ comments = [], postId, onAddComment }) {
 
       <div className="comment-list__items">
         {comments.map((comment) => (
-          <CommentCard key={comment.id} comment={comment} />
+          <CommentCard 
+            key={comment.id} 
+            comment={comment} 
+            onDelete={handleDeleteComment}
+          />
         ))}
       </div>
     </div>

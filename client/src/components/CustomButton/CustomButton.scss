@@ -16,6 +16,15 @@
   box-shadow: 0 6px 16px rgba(79, 70, 229, 0.28);
   transition: 0.2s;
 
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
   &:hover {
     box-shadow: 0 8px 20px rgba(79, 70, 229, 0.38);
     transform: translateY(-1px);
@@ -32,5 +41,23 @@
   &.loading {
     opacity: 0.7;
     cursor: not-allowed;
+  }
+
+  &--success {
+    background-color: #10b981; // green-500
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.28);
+    &:hover:not(.loading) {
+      background-color: #059669; // green-600
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.38);
+    }
+  }
+
+  &--danger {
+    background-color: #ef4444; // red-500
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.28);
+    &:hover:not(.loading) {
+      background-color: #dc2626; // red-600
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.38);
+    }
   }
 }

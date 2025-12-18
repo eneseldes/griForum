@@ -13,6 +13,8 @@ function CustomButton({
   requireAuth = false,
   onClick = null,
   disabled = false,
+  variant = "default", // "default", "success", "danger"
+  icon = null, // React icon component
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -88,10 +90,15 @@ function CustomButton({
 
   return (
     <div 
-      className={`custom-button ${loading ? 'loading' : ''} ${disabled ? 'disabled' : ''}`}
+      className={`custom-button custom-button--${variant} ${loading ? 'loading' : ''} ${disabled ? 'disabled' : ''}`}
       onClick={handleClick}
     >
-      {loading ? 'Loading...' : label}
+      {loading ? 'Loading...' : (
+        <>
+          {icon && <span className="custom-button__icon">{icon}</span>}
+          {label}
+        </>
+      )}
     </div>
   );
 }

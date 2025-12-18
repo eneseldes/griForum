@@ -88,7 +88,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/post/:postId" element={<PostDetailPage />} />
         <Route path="/create-post" element={<CreatePostPage />} />
-        <Route path="/edit-post" element={<EditPostPage />} />
+        <Route path="/edit-post/:postId" element={<EditPostPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/admin-panel" element={<AdminPanel />} />
         <Route path="/test" element={<TestBackend />} />
