@@ -52,6 +52,9 @@ function CustomButton({
       if (['POST', 'PUT', 'PATCH'].includes(method.toUpperCase()) && body) {
         requestOptions.body = typeof body === 'string' ? body : JSON.stringify(body);
       }
+      
+      // eklendi
+      const url = `${API_BASE_URL}${path}`;
 
       const response = await fetch(url, requestOptions);
 

@@ -3,11 +3,49 @@ import { FaCheckCircle } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import CustomButton from "../../components/CustomButton/CustomButton";
+import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 function RegisterPage() {
+  const navigate = useNavigate();
+
+  // 1. INPUT VERİLERİNİ TUTAN STATE (Hook)
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  // 2. Inputa yazılanı hafızaya kaydeden fonksiyon
+  const handleChange = (e) => {
+    // e.target.id (örneğin "email") hangisiyse onun değerini güncelle
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  // 3. Kayıt başarılı olursa ne yapalım?
+  const handleSuccess = (data) => {
+    alert("Kayıt Başarılı! Giriş yapabilirsiniz.");
+    navigate("/login"); // Login sayfasına at
+  };
+
   return (
     <div className="main">
       <div className="title">
         <h1>Sign Up</h1>
+      </div>
+
+      <div className="username-section">
+        <form action="">
+          <div className="username-form">
+            <label for="username-label">Username</label>
+            <input
+              type="text"
+              id="username" // State'teki isimle (username) aynı olmalı
+              placeholder="Kullanıcı Adı"
+              value={formData.username}
+              onChange={handleChange}W
+            />
+          </div>
+        </form>
       </div>
 
       <div className="email-section">
@@ -16,8 +54,10 @@ function RegisterPage() {
             <label for="signup-email">Email</label>
             <input
               type="email"
-              id="signup-email"
-              placeholder="example@gmail.com"
+              id="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
             />
             <FaCheckCircle className="input-icon" />
           </div>
@@ -32,7 +72,13 @@ function RegisterPage() {
         <form action="">
           <div className="password-form">
             <label for="signup-password">Create a password</label>
-            <input type="password" id="login-pass" placeholder="123456789" />
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+            />
             <FaEyeSlash className="pass-icon" />
             <FaEye className="pass-icon" />
           </div>
@@ -43,7 +89,13 @@ function RegisterPage() {
         <form action="">
           <div className="password-form">
             <label for="signup-password">Confirm password</label>
-            <input type="password" id="login-pass" placeholder="123456789" />
+            <input
+              type="password"
+              id="password"
+              placeholder="Şifre"
+              value={formData.password}
+              onChange={handleChange}
+            />
             <FaEyeSlash className="pass-icon" />
             <FaEye className="pass-icon" />
           </div>
@@ -51,15 +103,14 @@ function RegisterPage() {
       </div>
 
       <div className="button-section">
-        {/*
-                login buton ve signupa atlama
-              */}
-        {/* <button type="submit" className="login-button">
-          Login
-        </button> */}
+        
         <CustomButton
-          label="Sign Up" 
-          path="/auth/register" 
+          label="Sign Up" // Buton yazısı
+          path="/auth/register" // Backend adresi (base url hariç)
+          method="POST" // Veri gönderme tipi
+          body={formData} // Gönderilecek paket (username, email, password)
+          onSuccess={handleSuccess} // Başarılı olursa çalışacak fonksiyon
+          onError={(err) => alert("Hata: " + err)} // Hata olursa
         />
       </div>
       <p>
