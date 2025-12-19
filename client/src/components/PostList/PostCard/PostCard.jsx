@@ -1,18 +1,16 @@
+/**
+ * PostCard Component
+ * 
+ * Tek bir post'u kart formatında gösteren component. Post başlığı, kategori,
+ * özet, görsel ve "Read more" linkini içerir.
+ */
+
 import "./PostCard.scss";
 import { Link } from "react-router-dom";
-
-const CATEGORY_IMAGES = {
-  Coding: "/coding.png",
-  Technology: "/tekno.png",
-  Travel: "/travel.png",
-  "Web Development": "/coding.png",
-  "Life Style": "/travel.png",
-
-};
-
+import { CATEGORY_IMAGES, DEFAULT_IMAGE } from "../../../constants/config";
 
 function PostCard({ post = {} }) {
-  const categoryImage = CATEGORY_IMAGES[post.category];
+  const categoryImage = CATEGORY_IMAGES[post.category] || DEFAULT_IMAGE;
 
   return (
     <>

@@ -1,104 +1,55 @@
-import { useState } from 'react';
-import "./CustomButton.scss";
+/**
+ * CustomButton Component
+ * 
+ * Yeniden kullanılabilir buton component'i. Farklı variant'lar (default, success, danger),
+ * icon desteği, loading state ve form submission desteği sağlar.
+ */
 
-const API_BASE_URL = 'http://localhost:3000/api';
+import "./CustomButton.scss";
 
 function CustomButton({
   label,
-  path,
-  method = "GET",
-  body = null,
-  onSuccess = null,
-  onError = null,
-  requireAuth = false,
   onClick = null,
   disabled = false,
   variant = "default", // "default", "success", "danger"
   icon = null, // React icon component
+  type = null, // "button", "submit", "reset" - if provided, renders as button element
+  loading = false, // External loading state
 }) {
-  const [loading, setLoading] = useState(false);
-
-  const handleClick = async () => {
-    // Eğer dışarıdan onClick verildiyse, API isteği yapma, sadece onu çalıştır
-    if (onClick) {
-      if (disabled || loading) return;
-      onClick();
-      return;
-    }
-
-    if (!path) {
-      console.error('CustomButton: path prop is required for API request');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('token');
-      
-      // If authentication is required and token is not present, throw an error
-      if (requireAuth && !token) {
-        throw new Error('Authentication required');
-      }
-
-      const headers = {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` })
-      };
-
-      const requestOptions = {
-        method: method.toUpperCase(),
-        headers
-      };
-
-      // Add body
-      if (['POST', 'PUT', 'PATCH'].includes(method.toUpperCase()) && body) {
-        requestOptions.body = typeof body === 'string' ? body : JSON.stringify(body);
-      }
-
-      const response = await fetch(url, requestOptions);
-
-      let data;
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        data = await response.json();
-      } else {
-        data = await response.text();
-      }
-
-      if (response.ok) {
-        if (onSuccess) {
-          onSuccess(data, response);
-        }
-      } else {
-        const error = data?.message || data?.error || `Request failed with status ${response.status}`;
-        if (onError) {
-          onError(error, response, data);
-        } else {
-          console.error('API Error:', error);
-        }
-      }
-    } catch (error) {
-      if (onError) {
-        onError(error.message, null, null);
-      } else {
-        console.error('API Request Error:', error.message);
-      }
-    } finally {
-      setLoading(false);
-    }
+  const handleClick = () => {
+    if (disabled || loading || !onClick) return;
+    onClick();
   };
 
+  const className = `custom-button custom-button--${variant} ${loading ? 'loading' : ''} ${disabled ? 'disabled' : ''}`;
+  const content = (
+    <>
+      {icon && <span className="custom-button__icon">{icon}</span>}
+      {label}
+    </>
+  );
+
+  // If type is provided, render as button element (for form submission)
+  if (type) {
+    return (
+      <button
+        type={type}
+        className={className}
+        onClick={type === "submit" ? undefined : handleClick}
+        disabled={disabled || loading}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  // Otherwise render as div (default behavior)
   return (
     <div 
-      className={`custom-button custom-button--${variant} ${loading ? 'loading' : ''} ${disabled ? 'disabled' : ''}`}
+      className={className}
       onClick={handleClick}
     >
-      {loading ? 'Loading...' : (
-        <>
-          {icon && <span className="custom-button__icon">{icon}</span>}
-          {label}
-        </>
-      )}
+      {content}
     </div>
   );
 }

@@ -1,9 +1,18 @@
+/**
+ * LikeButton Component
+ * 
+ * Post ve comment'ler için beğeni butonu. Optimistic update yapar, loading state yönetir
+ * ve beğeni durumu değişikliklerini parent component'e callback ile bildirir.
+ */
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
-import { PostService } from "../../services/PostService";
-import { CommentService } from "../../services/CommentService";
-import { getUserIdFromToken } from "../../services/api";
+import { PostService } from "../../features/post";
+import { CommentService } from "../../features/comment";
+import { getUserIdFromToken } from "../../features/shared";
+import { handleApiError } from "../../utils/errorHandler";
+import { logError } from "../../utils/logger";
 
 import "./LikeButton.scss";
 
@@ -53,7 +62,7 @@ function LikeButton({
           // Geçersiz response - optimistic update'i geri al
           setLiked(previousLiked);
           setCount(previousCount);
-          console.error("Invalid response from likePost:", response);
+          logError("Invalid response from likePost:", response);
         }
       } else if (type === "comment") {
         response = await CommentService.likeComment(id);
@@ -72,20 +81,19 @@ function LikeButton({
           // Geçersiz response - optimistic update'i geri al
           setLiked(previousLiked);
           setCount(previousCount);
-          console.error("Invalid response from likeComment:", response);
+          logError("Invalid response from likeComment:", response);
         }
       }
     } catch (error) {
       // Hata durumunda optimistic update'i geri al
       setLiked(previousLiked);
       setCount(previousCount);
-      console.error("Error liking:", error);
       
-      // 401 hatası durumunda login sayfasına yönlendir
+      // 401 hatası durumunda login sayfasına yönlendir (handleApiError içinde yapılıyor)
       if (error.status === 401) {
         navigate("/login");
-      } else if (error.status === 500) {
-        alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+      } else {
+        handleApiError(error, navigate, "An error occurred. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -96,7 +104,6 @@ function LikeButton({
     <div
       className={`like-button ${loading ? "loading" : ""} ${loading ? "disabled" : ""}`}
       onClick={handleClick}
-      style={{ cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.6 : 1 }}
     >
       <div className="like-button__icons">
         <AiOutlineLike

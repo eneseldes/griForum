@@ -1,4 +1,16 @@
-const API_BASE_URL = "http://localhost:3000/api";
+/**
+ * Shared API Utilities
+ * 
+ * Merkezi API client. Tüm HTTP istekleri için ortak fonksiyonlar sağlar.
+ * JWT token yönetimi, header oluşturma, error handling ve response parsing içerir.
+ * getUserIdFromToken fonksiyonu ile JWT token'dan user ID çıkarır.
+ */
+
+import { API_BASE_URL } from "../../constants/config";
+import { logError } from "../../utils/logger";
+
+// Re-export for backward compatibility
+export { API_BASE_URL };
 
 const getAuthToken = () => {
   if (typeof window === "undefined") return null;
@@ -19,7 +31,7 @@ export const getUserIdFromToken = () => {
     const decoded = JSON.parse(atob(payload));
     return decoded.id || null;
   } catch (error) {
-    console.error("Error decoding token:", error);
+    logError("Error decoding token:", error);
     return null;
   }
 };
@@ -71,7 +83,7 @@ async function request(path, options = {}) {
           data = JSON.parse(text);
         } catch (parseError) {
           // JSON parse hatası durumunda
-          console.error("JSON parse error:", parseError, "Text:", text);
+          logError("JSON parse error:", parseError);
           data = { message: "Invalid JSON response", raw: text };
         }
       }
@@ -80,7 +92,7 @@ async function request(path, options = {}) {
       data = text || null;
     }
   } catch (error) {
-    console.error("Error reading response:", error);
+    logError("Error reading response:", error);
     data = null;
   }
 
@@ -110,3 +122,4 @@ export const api = {
 };
 
 export default api;
+

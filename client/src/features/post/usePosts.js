@@ -1,17 +1,23 @@
+/**
+ * usePosts Hook
+ * 
+ * Tüm post'ları fetch eden custom hook. Loading state ve error handling içerir.
+ */
+
 import { useEffect, useState } from "react";
-import { PostService } from "../services/PostService";
-import { mapPostsFromApi } from "../mappers/postMapper";
+import { PostService } from "./PostService";
+import { mapPostsFromApi } from "./postMapper";
 
 export function usePosts() {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
 
     const fetchPosts = async () => {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
       try {
         const raw = await PostService.getPosts();
@@ -21,7 +27,7 @@ export function usePosts() {
         if (!isMounted) return;
         setError(err);
       } finally {
-        if (isMounted) setLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     };
 
@@ -32,7 +38,6 @@ export function usePosts() {
     };
   }, []);
 
-  return { posts, loading, error };
+  return { posts, isLoading, error };
 }
-
 

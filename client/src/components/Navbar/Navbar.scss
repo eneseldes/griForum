@@ -12,9 +12,25 @@
   justify-content: space-between;
   padding: 10px 10% 10px 10%;
 
+  &__left {
+    .navbar__logo {
+      color: $color-primary;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.5rem;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
   &__right {
     display: flex;
+    align-items: center;
     column-gap: 30px;
+    
     ul {
       display: flex;
       list-style: none;
@@ -29,21 +45,15 @@
       }
     }
 
-    &__getStarted {
+    &__seeus {
       background-color: $color-primary;
       border-radius: $radius-md;
-      a {
-        padding: 10px;
-        color: white;
-      }
     }
 
     &__menu {
-
       display: flex;
       column-gap: 30px;
-      
-      
+
       //   position: absolute;
       //   right: -100%;
       //   top: 500px;
@@ -51,7 +61,7 @@
       @media (max-width: 800px) {
         position: absolute;
         right: -100%;
-      } 
+      }
 
       &.__show-menu {
         @media (max-width: 800px) {
@@ -65,16 +75,14 @@
           box-shadow: 0 0 5px rgba(0, 0, 0, 0.266);
           padding: 2rem;
           background-color: white;
-          
 
           ul {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          }
         }
 
-        
         // position: static; // relative left right etkilemez absolute için base sağlar ama absolute diye dışardan müdahele etmeden önce base hali static
         // right: 0%;
         // top: 0px;

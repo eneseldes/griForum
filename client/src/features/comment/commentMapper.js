@@ -1,3 +1,12 @@
+/**
+ * Comment Mapper
+ * 
+ * Backend'den gelen raw comment verilerini frontend formatına dönüştüren mapper.
+ * Avatar URL'lerini düzenler ve tarih formatlarını dönüştürür.
+ */
+
+import { DEFAULT_AVATAR } from "../../constants/config";
+
 export const mapCommentFromApi = (rawComment) => {
   if (!rawComment) return null;
 
@@ -11,7 +20,7 @@ export const mapCommentFromApi = (rawComment) => {
     avatar:
       rawComment.author?.profilePicture ||
       rawComment.author?.avatar ||
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+      DEFAULT_AVATAR,
     date: createdAt ? createdAt.toLocaleDateString() : "",
     likes: Array.isArray(rawComment.likes) ? rawComment.likes : [],
     likesCount: Array.isArray(rawComment.likes) ? rawComment.likes.length : 0,
@@ -23,5 +32,4 @@ export const mapCommentsFromApi = (rawComments) => {
   if (!Array.isArray(rawComments)) return [];
   return rawComments.map(mapCommentFromApi);
 };
-
 

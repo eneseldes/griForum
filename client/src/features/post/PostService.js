@@ -1,11 +1,19 @@
-import { api } from "./api";
+/**
+ * Post Service
+ * 
+ * Post ile ilgili tüm API çağrılarını yöneten service. CRUD işlemleri,
+ * beğeni işlemleri ve kategori filtreleme içerir.
+ */
+
+import { api } from "../shared/api";
 
 const withAuth = true;
 
 export const PostService = {
-  async getPosts() {
-    // Public endpoint in backend: GET /api/posts
-    return api.get("/posts");
+  async getPosts(category = null) {
+    // Public endpoint in backend: GET /api/posts?category=...
+    const queryParams = category ? `?category=${encodeURIComponent(category)}` : "";
+    return api.get(`/posts${queryParams}`);
   },
 
   async getPostById(postId) {
@@ -35,5 +43,4 @@ export const PostService = {
 };
 
 export default PostService;
-
 

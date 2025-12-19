@@ -1,3 +1,11 @@
+/**
+ * Main Application Component
+ * 
+ * Uygulamanın ana component'i. Router yapılandırması, route tanımlamaları
+ * ve global component'lerin (Navbar, Footer, ToastContainer) yerleşimini yönetir.
+ * Ayrıca test kullanıcısı ile hızlı giriş/çıkış için yardımcı buton içerir.
+ */
+
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -14,8 +22,10 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import TestBackend from "./pages/TestBackend/TestBackend";
 
 import "./App.scss";
-
-const API_BASE_URL = "http://localhost:3000/api";
+import { API_BASE_URL } from "./constants/config";
+import ToastContainer from "./components/ToastContainer/ToastContainer";
+import { logError } from "./utils/logger";
+import { showError } from "./utils/toast";
 
 function App() {
   // Test kullanıcısı için basit login state
@@ -49,8 +59,8 @@ function App() {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error("Test login hatası:", data);
-        alert(data?.message || "Test kullanıcısı ile giriş yapılamadı.");
+        logError("Test login hatası:", data);
+        showError(data?.message || "Test kullanıcısı ile giriş yapılamadı.");
         return;
       }
 
@@ -58,11 +68,11 @@ function App() {
         localStorage.setItem("token", data.token);
         setIsTestLoggedIn(true);
       } else {
-        alert("Sunucudan token alınamadı.");
+        showError("Sunucudan token alınamadı.");
       }
     } catch (error) {
-      console.error("Test login isteği hatası:", error);
-      alert("Test kullanıcısı ile giriş yapılırken bir hata oluştu.");
+      logError("Test login isteği hatası:", error);
+      showError("Test kullanıcısı ile giriş yapılırken bir hata oluştu.");
     } finally {
       setTestAuthLoading(false);
     }
@@ -94,6 +104,7 @@ function App() {
         <Route path="/test" element={<TestBackend />} />
       </Routes>
       <Footer />
+      <ToastContainer />
 
       {/* Ekranın sol altındaki küçük test giriş/çıkış butonu */}
       <button

@@ -1,3 +1,11 @@
+/**
+ * PostDetailPage Component
+ * 
+ * Tek bir post'un detay sayfası. Post içeriği, yazar bilgileri, beğeni butonu,
+ * sahip kullanıcı için düzenleme/silme butonları ve yorum listesi içerir.
+ * Sidebar ile birlikte gösterilir.
+ */
+
 import "./PostDetailPage.scss";
 import CommentList from "../../components/CommentList/CommentList.jsx";
 import LikeButton from "../../components/LikeButton/LikeButton.jsx";
@@ -8,55 +16,17 @@ import { FaRegClock } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
-import { usePostDetail } from "../../hooks/usePostDetail";
-import { getUserIdFromToken } from "../../services/api";
-import { PostService } from "../../services/PostService";
-import { useState, useEffect } from "react";
+import { usePostDetail, usePostInteractions, PostService } from "../../features/post";
+import { handleApiError } from "../../utils/errorHandler";
+import { DEFAULT_AVATAR } from "../../constants/config";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function PostDetailPage() {
   const navigate = useNavigate();
   const { post, comments, setComments, loading, error, postId } = usePostDetail();
-  const [hasUserLiked, setHasUserLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [isPostOwner, setIsPostOwner] = useState(false);
+  const { isOwner: isPostOwner, hasUserLiked, likeCount, setHasUserLiked, setLikeCount } = usePostInteractions(post);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-  useEffect(() => {
-    if (post) {
-      const userId = getUserIdFromToken();
-      const isLiked = userId && Array.isArray(post.likes) && post.likes.some(
-        (likeId) => likeId.toString() === userId
-      );
-      setHasUserLiked(isLiked || false);
-      setLikeCount(post.likesCount || 0);
-      
-      // Post sahibi kontrolü
-      const ownerCheck = userId && post.authorId && (
-        post.authorId.toString() === userId.toString() ||
-        (post.raw?.author && post.raw.author.toString() === userId.toString())
-      );
-      setIsPostOwner(ownerCheck || false);
-    }
-  }, [post]);
-
-  const handleEditPost = () => {
-    navigate(`/edit-post/${postId}`);
-  };
-
-  const handleDeletePost = async () => {
-    try {
-      await PostService.deletePost(postId);
-      navigate("/");
-    } catch (error) {
-      console.error("Error deleting post:", error);
-      if (error.status === 401) {
-        navigate("/login");
-      } else {
-        alert(error.data?.message || "Failed to delete post. Please try again.");
-      }
-    }
-  };
 
   if (loading && !post) {
     return <p>Loading post...</p>;
@@ -95,7 +65,7 @@ function PostDetailPage() {
             <div className="post-meta">
               <img
                 className="post-meta__avatar"
-                src={post.authorAvatar || "https://i.pravatar.cc/150?img=69"}
+                src={post.authorAvatar || DEFAULT_AVATAR}
                 alt={post.title}
               />
               <div className="post-meta__info">
@@ -129,7 +99,7 @@ function PostDetailPage() {
                 <div className="post-actions__owner-buttons">
                   <CustomButton
                     label="Edit"
-                    onClick={handleEditPost}
+                    onClick={() => navigate(`/edit-post/${postId}`)}
                     variant="success"
                     icon={<FaEdit />}
                   />
@@ -146,7 +116,14 @@ function PostDetailPage() {
             <ConfirmDialog
               isOpen={showDeleteDialog}
               onClose={() => setShowDeleteDialog(false)}
-              onConfirm={handleDeletePost}
+              onConfirm={async () => {
+                try {
+                  await PostService.deletePost(postId);
+                  navigate("/");
+                } catch (error) {
+                  handleApiError(error, navigate, "Failed to delete post. Please try again.");
+                }
+              }}
               title="Delete Post"
               message="Are you sure you want to delete this post? This action cannot be undone."
               confirmText="Delete"

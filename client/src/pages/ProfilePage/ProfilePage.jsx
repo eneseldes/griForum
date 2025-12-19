@@ -1,19 +1,20 @@
+/**
+ * ProfilePage Component
+ * 
+ * Kullanıcı profil sayfası. Kullanıcı bilgilerini gösterir, username ve password
+ * güncelleme formu içerir. Kullanıcının oluşturduğu post'ları ve beğendiği
+ * post'ları listeler.
+ */
+
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserService } from "../../services/UserService";
-import { mapPostsFromApi } from "../../mappers/postMapper";
 import PostList from "../../components/PostList/PostList.jsx";
 import CustomButton from "../../components/CustomButton/CustomButton.jsx";
 import ConfirmDialog from "../../components/ConfirmDialog/ConfirmDialog.jsx";
+import { useProfile } from "../../features/user";
 import "./ProfilePage.scss";
 
 function ProfilePage() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [myPosts, setMyPosts] = useState([]);
-  const [likedPosts, setLikedPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
+  const { user, myPosts, likedPosts, isLoading, isSubmitting, updateProfile } = useProfile();
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
 
   // Form state
@@ -21,87 +22,29 @@ function ProfilePage() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
+  // Form state'lerini user data ile senkronize et
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setLoading(true);
-        const [userData, myPostsData, likedPostsData] = await Promise.all([
-          UserService.getMe(),
-          UserService.getMyPosts().catch(() => []),
-          UserService.getLikedPosts().catch(() => []),
-        ]);
-
-        setUser(userData);
-        setEmail(userData.email || "");
-        setUsername(userData.username || "");
-        setMyPosts(mapPostsFromApi(myPostsData));
-        setLikedPosts(mapPostsFromApi(likedPostsData));
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        if (error.status === 401) {
-          navigate("/login");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, [navigate]);
-
-  const handleUpdateProfile = async () => {
-    if (!username.trim()) {
-      alert("Username cannot be empty");
-      setShowUpdateDialog(false);
-      return;
+    if (user) {
+      setEmail(user.email || "");
+      setUsername(user.username || "");
     }
-
-    setUpdating(true);
-    try {
-      const payload = {
-        username: username.trim(),
-      };
-
-      if (password.trim()) {
-        payload.password = password.trim();
-      }
-
-      const response = await UserService.updateProfile(payload);
-      
-      if (response) {
-        setUser(response.user || response);
-        setPassword(""); // Şifreyi temizle
-        setShowUpdateDialog(false);
-        // Başarı mesajı için başka bir dialog gösterebiliriz veya sadece kapatabiliriz
-      }
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      setShowUpdateDialog(false);
-      if (error.status === 401) {
-        navigate("/login");
-      } else {
-        alert(error.data?.message || "Failed to update profile. Please try again.");
-      }
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="profile-page">
-        <div className="container">
-          <p>Loading profile...</p>
-        </div>
-      </div>
-    );
-  }
+  }, [user]);
 
   if (!user) {
     return (
       <div className="profile-page">
         <div className="container">
           <p>User not found.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="profile-page">
+        <div className="container">
+          <p>Loading profile...</p>
         </div>
       </div>
     );
@@ -184,7 +127,15 @@ function ProfilePage() {
         <ConfirmDialog
           isOpen={showUpdateDialog}
           onClose={() => setShowUpdateDialog(false)}
-          onConfirm={handleUpdateProfile}
+          onConfirm={async () => {
+            const success = await updateProfile(username, password);
+            if (success) {
+              setPassword("");
+              setShowUpdateDialog(false);
+            } else {
+              setShowUpdateDialog(false);
+            }
+          }}
           title="Update Profile"
           message="Are you sure you want to update your profile information?"
           confirmText="Update"

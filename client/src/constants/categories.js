@@ -1,3 +1,10 @@
+/**
+ * Post Categories Constants
+ * 
+ * Post kategorileri için enum ve helper fonksiyonlar.
+ * Backend'deki kategori sabitleri ile uyumlu olmalıdır.
+ */
+
 // Post Categories Enum - Must match backend constants
 export const POST_CATEGORIES = {
   CODING: "Coding",

@@ -1,22 +1,21 @@
+/**
+ * HomePage Component
+ * 
+ * Uygulamanın ana sayfası. Landing section, "Write a Story" butonu ve
+ * pagination ile post listesi gösterir. usePostsWithPagination hook'u ile
+ * post'ları yükler ve "Load More" butonu ile daha fazla post yüklenebilir.
+ */
+
 import { useNavigate } from "react-router-dom";
 import "./HomePage.scss";
 import PostList from "../../components/PostList/PostList.jsx";
 import CustomButton from "../../components/CustomButton/CustomButton.jsx";
-import { usePosts } from "../../hooks/usePosts";
-import { getUserIdFromToken } from "../../services/api";
+import { usePostsWithPagination } from "../../features/post";
+import { navigateWithAuth } from "../../utils/navigationUtils";
 
 function HomePage() {
   const navigate = useNavigate();
-  const { posts, loading, error } = usePosts();
-
-  const handleWriteStory = () => {
-    const userId = getUserIdFromToken();
-    if (userId) {
-      navigate("/create-post");
-    } else {
-      navigate("/login");
-    }
-  };
+  const { posts, isLoading, isLoadingMore, error, hasMore, loadMore } = usePostsWithPagination();
 
   return (
     <div className="home-page">
@@ -27,17 +26,30 @@ function HomePage() {
 
           <CustomButton 
             label={"Write a Story"} 
-            onClick={handleWriteStory}
+            onClick={() => navigateWithAuth(navigate, "/create-post", "/login")}
           />
         </div>
       </div>
 
       <h1>Recent Posts</h1>
 
-      {loading && <p>Loading posts...</p>}
+      {isLoading && <p>Loading posts...</p>}
       {error && <p>Could not load posts.</p>}
 
-      {!loading && !error && <PostList posts={posts} />}
+      {!isLoading && !error && (
+        <>
+          <PostList posts={posts} />
+          {hasMore && (
+            <div className="home-page__load-more">
+              <CustomButton
+                label={isLoadingMore ? "Loading..." : "Load More"}
+                onClick={loadMore}
+                disabled={isLoadingMore}
+              />
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

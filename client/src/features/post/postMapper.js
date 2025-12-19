@@ -1,19 +1,27 @@
-import { editorJsToPlainText } from "../utils/editorUtils";
+/**
+ * Post Mapper
+ * 
+ * Backend'den gelen raw post verilerini frontend formatına dönüştüren mapper.
+ * Editor.js content'ini plain text'e çevirir, excerpt oluşturur ve
+ * görsel URL'lerini düzenler.
+ */
 
-const API_BASE_URL = "http://localhost:3000";
+import { editorJsToPlainText } from "../../utils/editorUtils";
+import { DEFAULT_IMAGE } from "../../constants/config";
 
 const getImageUrl = (images) => {
-  if (!Array.isArray(images) || images.length === 0) return "/coding.png";
+  if (!Array.isArray(images) || images.length === 0) return DEFAULT_IMAGE;
   const first = images[0];
   // Eğer backend zaten tam URL dönüyorsa direkt kullan
   if (first.startsWith("http://") || first.startsWith("https://")) {
     return first;
   }
-  // Backend uploads klasörü altındaysa, server base URL ile birleştir
+  // Public klasöründen çek (relative path)
   if (first.startsWith("/")) {
-    return `${API_BASE_URL}${first}`;
+    return first;
   }
-  return `${API_BASE_URL}/${first}`;
+  // Relative path olarak döndür
+  return `/${first}`;
 };
 
 export const mapPostFromApi = (rawPost) => {
@@ -49,5 +57,4 @@ export const mapPostsFromApi = (rawPosts) => {
   if (!Array.isArray(rawPosts)) return [];
   return rawPosts.map(mapPostFromApi);
 };
-
 

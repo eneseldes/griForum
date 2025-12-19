@@ -1,4 +1,11 @@
-import { api } from "./api";
+/**
+ * User Service
+ * 
+ * User ile ilgili tüm API çağrılarını yöneten service. Profil bilgileri,
+ * profil güncelleme, kullanıcının post'ları ve beğendiği post'ları getirme işlemleri içerir.
+ */
+
+import { api } from "../shared/api";
 
 const withAuth = true;
 

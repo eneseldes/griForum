@@ -1,33 +1,34 @@
+/**
+ * Navbar Component
+ * 
+ * Uygulamanın ana navigasyon çubuğu. Logo, menü linkleri (Contact, About, Write, Profile/Sign In)
+ * ve mobil hamburger menü içerir. Kullanıcı giriş durumuna göre "Sign In" veya "Profile" linki gösterir.
+ */
+
 import "./Navbar.scss";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaSearch } from "react-icons/fa";
-import { CiSearch } from "react-icons/ci";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
-import { getUserIdFromToken } from "../../services/api";
+import { useAuth } from "../../features/user";
+import { navigateWithAuth } from "../../utils/navigationUtils";
 
 function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const handleGetStarted = (e) => {
-    e.preventDefault();
-    const userId = getUserIdFromToken();
-    if (userId) {
-      navigate("/create-post");
-    } else {
-      navigate("/login");
-    }
-  };
+  const isLoggedIn = useAuth();
 
   const handleWrite = (e) => {
     e.preventDefault();
-    const userId = getUserIdFromToken();
-    if (userId) {
-      navigate("/create-post");
-    } else {
-      navigate("/login");
+    navigateWithAuth(navigate, "/create-post", "/login");
+  };
+
+  const handleContact = (e) => {
+    e.preventDefault();
+    // Footer'a scroll yap
+    const footer = document.querySelector('.footer');
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -36,26 +37,14 @@ function Navbar() {
 
     <div className="navbar">
       <div className="navbar__left">
-        <div>Logo</div>
+        <Link to="/" className="navbar__logo">griForum</Link>
       </div>
 
       <div className="navbar__right">
         <div className={`navbar__right__menu ${menuOpen ? "__show-menu" : ""}`}>
           <ul>
             <li>
-              <a href="">
-                <FaSearch />
-              </a>
-            </li>
-
-            {/* <li>
-                <a href="">
-                  <CiSearch />
-                </a>
-              </li> */}
-
-            <li>
-              <a href="">Contact</a>
+              <a href="" onClick={handleContact}>Contact</a>
             </li>
             <li>
               <a href="">About</a>
@@ -64,14 +53,17 @@ function Navbar() {
               <a href="" onClick={handleWrite}>Write</a>
             </li>
             <li>
-              <a href="/login">Sign In</a>
+              {isLoggedIn ? (
+                <a href="/profile">Profile</a>
+              ) : (
+                <a href="/login">Sign In</a>
+              )}
             </li>
           </ul>
 
-          <div className="navbar__right__getStarted">
-            <a href="" onClick={handleGetStarted}>Get Started</a>
+          <div className="navbar__right__seeus">
+            <a className="custom-button" href="https://www.google.com/" target="_blank">Learn About Us</a>
           </div>
-
         </div>  
 
         {/* show-menu right:0 !important;

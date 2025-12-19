@@ -1,3 +1,10 @@
+/**
+ * EditorOutput Component
+ * 
+ * Editor.js JSON output'unu HTML elementlerine dönüştüren component.
+ * Paragraph, header, list, quote ve code block'larını render eder.
+ */
+
 import { createElement } from "react";
 import "./EditorOutput.scss";
 

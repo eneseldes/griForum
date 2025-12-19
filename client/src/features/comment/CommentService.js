@@ -1,4 +1,11 @@
-import { api } from "./api";
+/**
+ * Comment Service
+ * 
+ * Comment ile ilgili tüm API çağrılarını yöneten service. CRUD işlemleri
+ * ve beğeni işlemleri içerir.
+ */
+
+import { api } from "../shared/api";
 
 const withAuth = true;
 
@@ -30,5 +37,4 @@ export const CommentService = {
 };
 
 export default CommentService;
-
 

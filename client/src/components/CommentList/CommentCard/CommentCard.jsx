@@ -1,36 +1,26 @@
-import { useState, useEffect } from "react";
+/**
+ * CommentCard Component
+ * 
+ * Tek bir yorumu gösteren component. Yorum içeriği, yazar bilgisi, avatar, beğeni butonu
+ * ve sahip kullanıcı için silme butonu içerir.
+ */
+
+import { useState } from "react";
 import "./CommentCard.scss";
 import "../../LikeButton/LikeButton.jsx";
 import LikeButton from "../../LikeButton/LikeButton.jsx";
 import CustomButton from "../../CustomButton/CustomButton.jsx";
 import ConfirmDialog from "../../ConfirmDialog/ConfirmDialog.jsx";
 import { FaTrash } from "react-icons/fa";
-import { getUserIdFromToken } from "../../../services/api";
-import { CommentService } from "../../../services/CommentService";
+import { useCommentInteractions, CommentService } from "../../../features/comment";
+import { handleApiError } from "../../../utils/errorHandler";
+import { DEFAULT_AVATAR } from "../../../constants/config";
+import { useNavigate } from "react-router-dom";
 
 function CommentCard({ comment = {}, onDelete }) {
-  const [hasUserLiked, setHasUserLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [isCommentOwner, setIsCommentOwner] = useState(false);
+  const navigate = useNavigate();
+  const { isOwner: isCommentOwner, hasUserLiked, likeCount, setHasUserLiked, setLikeCount } = useCommentInteractions(comment);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-  useEffect(() => {
-    if (comment) {
-      const userId = getUserIdFromToken();
-      const isLiked = userId && Array.isArray(comment.likes) && comment.likes.some(
-        (likeId) => likeId.toString() === userId
-      );
-      setHasUserLiked(isLiked || false);
-      setLikeCount(comment.likesCount || (Array.isArray(comment.likes) ? comment.likes.length : 0));
-      
-      // Comment sahibi kontrolü
-      const ownerCheck = userId && comment.authorId && (
-        comment.authorId.toString() === userId.toString() ||
-        (comment.raw?.author && comment.raw.author.toString() === userId.toString())
-      );
-      setIsCommentOwner(ownerCheck || false);
-    }
-  }, [comment]);
 
   const handleDeleteComment = async () => {
     try {
@@ -39,19 +29,14 @@ function CommentCard({ comment = {}, onDelete }) {
         onDelete(comment.id);
       }
     } catch (error) {
-      console.error("Error deleting comment:", error);
-      if (error.status === 401) {
-        alert("You need to login to delete comments.");
-      } else {
-        alert(error.data?.message || "Failed to delete comment. Please try again.");
-      }
+      handleApiError(error, navigate, "Failed to delete comment. Please try again.");
     }
   };
 
   return (
     <div className="comment-card">
       <div className="comment-card__avatar">
-        <img src="https://i.pravatar.cc/150?img=2" alt={comment.username} />
+        <img src={comment.avatar || DEFAULT_AVATAR} alt={comment.username} />
       </div>
       <div className="comment-card__meta">
         <h4 className="comment-card__username">{comment.username}</h4>
