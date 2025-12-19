@@ -3,7 +3,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import CustomButton from "../../components/CustomButton/CustomButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,Link} from "react-router-dom";
 import React, { useState } from "react";
 function RegisterPage() {
   const navigate = useNavigate();
@@ -117,7 +117,7 @@ function RegisterPage() {
         Already have an account?{" "}
         <span className="bold-text">
           {" "}
-          <a href=""> Log in</a>
+          <Link to="/login">Log in</Link>
         </span>
       </p>
     </div>

@@ -58,6 +58,23 @@
       //   right: -100%;
       //   top: 500px;
 
+      /* Logout Butonu Stili */
+      .logout-btn {
+        opacity: 1 !important;
+        background-color: black; /* Arka planı siyah yap (Görünmesi için) */
+        color: white; /* Yazıyı beyaz yap */
+        border: 1px solid black; /* Çerçeve */
+        padding: 8px 16px; /* İç boşluk (Butonu şişmanlatır) */
+        border-radius: 5px; /* Köşeleri yuvarlat */
+        cursor: pointer; /* Üstüne gelince el işareti çıksın */
+        font-weight: bold; /* Yazı kalın olsun */
+        font-size: 14px; /* Yazı boyutu */
+        margin-left: 10px; /* Yanındaki isimden biraz uzaklaşsın */
+        transition: all 0.3s ease; /* Renk değişimini yumuşat */
+
+        
+      }
+
       @media (max-width: 800px) {
         position: absolute;
         right: -100%;
