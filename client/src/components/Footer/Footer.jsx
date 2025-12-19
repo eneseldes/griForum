@@ -1,3 +1,10 @@
+/**
+ * Footer Component
+ * 
+ * Uygulamanın alt bilgi bölümü. Site açıklaması, hızlı linkler ve sosyal medya
+ * bağlantılarını içerir.
+ */
+
 import { FaGithub } from "react-icons/fa";
 import { GrInstagram } from "react-icons/gr";
 

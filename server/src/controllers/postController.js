@@ -254,26 +254,57 @@ export const likePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
 
-    if (!post) return res.status(404).json({ message: "Gönderi bulunamadı" });
-
-    const userId = req.user.id;
-    const alreadyLiked = post.likes.includes(userId);
-
-    if (alreadyLiked) {
-      //unlike
-      post.likes = post.likes.filter((id) => id.toString() !== userId);
-    } else {
-      //like
-      post.likes.push(userId);
+    if (!post) {
+      return res.status(404).json({ message: "Gönderi bulunamadı" });
     }
 
+    const userId = req.user._id || req.user.id;
+    if (!userId) {
+      return res.status(401).json({ message: "Yetkilendirme gerekli." });
+    }
+
+    // post.likes undefined veya null olabilir, kontrol et
+    if (!Array.isArray(post.likes)) {
+      post.likes = [];
+    }
+
+    // ObjectId karşılaştırması için toString() kullan
+    const userIdString = userId.toString();
+    const likedIndex = post.likes.findIndex(
+      (id) => id && id.toString() === userIdString
+    );
+
+    const isLiking = likedIndex < 0; // Eğer likedIndex < 0 ise, beğeniyor demektir
+
+    if (likedIndex >= 0) {
+      // Unlike - beğeniyi kaldır
+      post.likes.splice(likedIndex, 1);
+      
+      // User'dan likedPosts array'inden de kaldır
+      await User.findByIdAndUpdate(userId, {
+        $pull: { likedPosts: post._id }
+      });
+    } else {
+      // Like - beğeniyi ekle
+      post.likes.push(userId);
+      
+      // User'a likedPosts array'ine ekle
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { likedPosts: post._id }
+      });
+    }
+
+    // Mongoose array değişikliğini işaretle
+    post.markModified('likes');
     await post.save();
 
     res.status(200).json({
-      liked: !alreadyLiked,
+      liked: isLiking,
       likeCount: post.likes.length,
     });
   } catch (err) {
+    console.error("Error liking post:", err);
+    console.error("Error stack:", err.stack);
     res.status(500).json({
       message: "Beğeni işlemi yapılamadı",
       error: err.message,
@@ -293,14 +324,26 @@ export const savePost = async (req, res) => {
 
     const userId = req.user.id;
 
-    const alreadySaved = post.savedBy.includes(userId);
+    const alreadySaved = post.savedBy.some(
+      (id) => id && id.toString() === userId.toString()
+    );
 
     if (alreadySaved) {
       //unsave
-      post.savedBy = post.savedBy.filter((id) => id.toString() !== userId);
+      post.savedBy = post.savedBy.filter((id) => id.toString() !== userId.toString());
+      
+      // User'dan savedPosts array'inden de kaldır
+      await User.findByIdAndUpdate(userId, {
+        $pull: { savedPosts: post._id }
+      });
     } else {
       //save
       post.savedBy.push(userId);
+      
+      // User'a savedPosts array'ine ekle
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { savedPosts: post._id }
+      });
     }
 
     await post.save();

@@ -1,12 +1,19 @@
+/**
+ * CommentForm Component
+ * 
+ * Yeni yorum eklemek için form component'i. Textarea ve submit butonu içerir.
+ * useCreateComment hook'unu kullanarak yorum oluşturur ve parent component'e callback ile bildirir.
+ */
+
 import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import CustomButton from "../../CustomButton/CustomButton.jsx";
-import useCreateComment from "../../../hooks/useCreateComment";
+import { useCreateComment } from "../../../features/comment";
 import "./CommentForm.scss";
 
 function CommentForm({ postId, onAddComment }) {
   const [comment, setComment] = useState("");
-  const { create, submitting, error, resetError } = useCreateComment(postId);
+  const { create, isSubmitting, error, resetError } = useCreateComment(postId);
 
   const handleSubmit = async (e) => {
     if (e && typeof e.preventDefault === "function") e.preventDefault();
@@ -25,9 +32,6 @@ function CommentForm({ postId, onAddComment }) {
       <h3 className="comment-form__title">Add A Comment</h3>
       <form onSubmit={handleSubmit} className="comment-form__wrapper">
         <div className="form-group">
-          <label htmlFor="comment-textarea" className="form-label">
-            Comment
-          </label>
           <textarea
             id="comment-textarea"
             className="form-textarea"
@@ -35,16 +39,17 @@ function CommentForm({ postId, onAddComment }) {
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={6}
-            disabled={submitting}
+            disabled={isSubmitting}
           />
         </div>
         {error && <p className="form-error">{error}</p>}
         <CustomButton
-          onClick={handleSubmit}
-          disabled={submitting || !comment.trim()}
+          type="submit"
+          disabled={isSubmitting || !comment.trim()}
+          loading={isSubmitting}
           label={
             <>
-              <FaPaperPlane /> {submitting ? "Sending..." : "Send Comment"}
+              <FaPaperPlane /> {isSubmitting ? "Sending..." : "Send Comment"}
             </>
           }
         />

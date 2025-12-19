@@ -1,82 +1,69 @@
+/**
+ * Navbar Component
+ * 
+ * Uygulamanın ana navigasyon çubuğu. Logo, menü linkleri (Contact, About, Write, Profile/Sign In)
+ * ve mobil hamburger menü içerir. Kullanıcı giriş durumuna göre "Sign In" veya "Profile" linki gösterir.
+ */
+
 import "./Navbar.scss";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Link ve yönlendirme için
-import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
+import { useAuth } from "../../features/user";
+import { navigateWithAuth } from "../../utils/navigationUtils";
 
 function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null); // Kullanıcı var mı yok mu?
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const isLoggedIn = useAuth();
 
-  // 1. Sayfa yüklendiğinde kullanıcı giriş yapmış mı kontrol et
-  useEffect(() => {
-    const user = localStorage.getItem("user"); // Login sayfasında kaydettiğimiz veri
-    if (user) {
-      setCurrentUser(JSON.parse(user)); // Varsa state'e at
+  const handleWrite = (e) => {
+    e.preventDefault();
+    navigateWithAuth(navigate, "/create-post", "/login");
+  };
+
+  const handleContact = (e) => {
+    e.preventDefault();
+    // Footer'a scroll yap
+    const footer = document.querySelector('.footer');
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth' });
     }
-  }, []);
-
-  // 2. Çıkış Yapma Fonksiyonu
-  const handleLogout = () => {
-    // Hafızayı temizle
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    
-    // State'i sıfırla
-    setCurrentUser(null);
-    
-    // Anasayfaya veya Login sayfasına at
-    navigate("/login");
   };
 
   return (
     <div className="navbar">
       {/* SOL TARA - LOGO */}
       <div className="navbar__left">
-        <Link to="/" className="logo-link">
-          <div className="logo">Logo</div>
-        </Link>
+        <Link to="/" className="navbar__logo">griForum</Link>
       </div>
 
       {/* SAĞ TARAF - MENÜ */}
       <div className="navbar__right">
         <div className={`navbar__right__menu ${menuOpen ? "__show-menu" : ""}`}>
           <ul>
-            {/* Herkese görünen linkler */}
-            <li><a href="#"><FaSearch /></a></li>
-            <li><Link to="/">Home</Link></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-
-            {/* --- BURASI DİNAMİK KISIM --- */}
-            
-            {currentUser ? (
-              // A) KULLANICI GİRİŞ YAPMIŞSA BUNLARI GÖSTER
-              <>
-                <li>
-                  <Link to="/write" className="write-link">Write</Link>
-                </li>
-                <li>
-                   {/* Kullanıcı Adı */}
-                  <span style={{ fontWeight: "bold" }}>{currentUser.username}</span>
-                </li>
-                <li>
-                  <button onClick={handleLogout} className="logout-btn">Logout</button>
-                </li>
-              </>
-            ) : (
-              // B) GİRİŞ YAPMAMIŞSA BUNLARI GÖSTER
-              <>
-                <li>
-                  <Link to="/login">Sign In</Link>
-                </li>
-                <div className="navbar__right__getStarted">
-                  <Link to="/register">Get Started</Link>
-                </div>
-              </>
-            )}
-            
+            <li>
+              <a href="" onClick={handleContact}>Contact</a>
+            </li>
+            <li>
+              <a href="">About</a>
+            </li>
+            <li>
+              <a href="" onClick={handleWrite}>Write</a>
+            </li>
+            <li>
+              {isLoggedIn ? (
+                <a href="/profile">Profile</a>
+              ) : (
+                <a href="/login">Sign In</a>
+              )}
+            </li>
           </ul>
+
+          <div className="navbar__right__seeus">
+            <a className="custom-button" href="https://www.google.com/" target="_blank">Learn About Us</a>
+          </div>
         </div>  
 
         {/* Hamburger Menü Butonu */}

@@ -1,0 +1,122 @@
+@import "../../styles/variables";
+
+.confirm-dialog {
+  &__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease;
+  }
+
+  & {
+    background-color: $color-bg;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 100%;
+    animation: slideUp 0.2s ease;
+  }
+
+  &__header {
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid $color-bg-secondary;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $color-text;
+  }
+
+  &__body {
+    padding: 1.5rem;
+  }
+
+  &__message {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: $color-text-secondary;
+  }
+
+  &__footer {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem 1.5rem;
+    justify-content: flex-end;
+  }
+
+  &__button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+
+    &--cancel {
+      background-color: $color-bg-secondary;
+      color: $color-text;
+      
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+
+    &--confirm {
+      color: #fff;
+      background-color: $color-primary;
+      
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+
+    &--confirm--default {
+      background-color: $color-primary;
+      
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+
+    &--confirm--danger {
+      background-color: #ef4444;
+      
+      &:hover {
+        background-color: #dc2626;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+

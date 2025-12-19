@@ -1,0 +1,75 @@
+@import "../../styles/variables";
+
+.editor-output {
+	&__paragraph {
+		margin-bottom: 1.25rem;
+		line-height: 1.8;
+		color: $color-text;
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	&__header {
+		margin-top: 1.5rem;
+		margin-bottom: 1rem;
+		font-weight: 700;
+		color: $color-text-secondary;
+		line-height: 1.4;
+		
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	&__header--h2 {
+		font-size: 1.75rem;
+	}
+
+	&__header--h3 {
+		font-size: 1.5rem;
+	}
+
+	&__header--h4 {
+		font-size: 1.25rem;
+	}
+
+	&__list {
+		margin: 1rem 0;
+		padding-left: 1.5rem;
+		color: $color-text;
+		line-height: 1.8;
+
+		li {
+			margin-bottom: 0.5rem;
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	&__quote {
+		margin: 1.5rem 0;
+		padding-left: 1rem;
+		border-left: 4px solid $color-primary;
+		color: $color-text;
+		font-style: italic;
+		line-height: 1.8;
+	}
+
+	&__code {
+		margin: 1.5rem 0;
+		padding: 1rem;
+		background-color: rgba(0, 0, 0, 0.05);
+		border-radius: 6px;
+		overflow-x: auto;
+		font-family: 'Courier New', monospace;
+		font-size: 0.9rem;
+		line-height: 1.6;
+
+		code {
+			color: $color-text;
+		}
+	}
+}
+

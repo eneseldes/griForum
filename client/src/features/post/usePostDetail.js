@@ -1,15 +1,22 @@
+/**
+ * usePostDetail Hook
+ * 
+ * Tek bir post'un detayını ve yorumlarını fetch eden custom hook.
+ * URL'den postId alır ve post ile comment'leri paralel olarak yükler.
+ */
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { PostService } from "../services/PostService";
-import { CommentService } from "../services/CommentService";
-import { mapPostFromApi } from "../mappers/postMapper";
-import { mapCommentsFromApi } from "../mappers/commentMapper";
+import { PostService } from "./PostService";
+import { CommentService } from "../comment/CommentService";
+import { mapPostFromApi } from "./postMapper";
+import { mapCommentsFromApi } from "../comment/commentMapper";
 
 export function usePostDetail() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -17,7 +24,7 @@ export function usePostDetail() {
     let isMounted = true;
 
     const fetchPostAndComments = async () => {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
       try {
         const [rawPost, rawComments] = await Promise.all([
@@ -33,7 +40,7 @@ export function usePostDetail() {
         if (!isMounted) return;
         setError(err);
       } finally {
-        if (isMounted) setLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     };
 
@@ -44,7 +51,6 @@ export function usePostDetail() {
     };
   }, [postId]);
 
-  return { post, comments, setComments, loading, error, postId };
+  return { post, comments, setComments, isLoading, error, postId };
 }
-
 

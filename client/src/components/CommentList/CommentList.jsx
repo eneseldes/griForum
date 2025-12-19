@@ -1,9 +1,23 @@
+/**
+ * CommentList Component
+ * 
+ * Post detay sayfasında yorumları gösteren container component. Kullanıcı giriş durumuna
+ * göre CommentForm veya login prompt gösterir. Yorum listesini CommentCard component'leri ile render eder.
+ */
+
 import "./CommentList.scss";
 import CommentCard from "./CommentCard/CommentCard.jsx";
 import CommentForm from "./CommentForm/CommentForm.jsx";
+import { useAuth } from "../../features/user";
 
-function CommentList({ comments = [], postId, onAddComment }) {
-  const isLoggedIn = !!localStorage.getItem("token");
+function CommentList({ comments = [], postId, onAddComment, onDeleteComment }) {
+  const isLoggedIn = useAuth();
+
+  const handleDeleteComment = (commentId) => {
+    if (onDeleteComment) {
+      onDeleteComment(commentId);
+    }
+  };
 
   return (
     <div className="comment-list">
@@ -23,7 +37,11 @@ function CommentList({ comments = [], postId, onAddComment }) {
 
       <div className="comment-list__items">
         {comments.map((comment) => (
-          <CommentCard key={comment.id} comment={comment} />
+          <CommentCard 
+            key={comment.id} 
+            comment={comment} 
+            onDelete={handleDeleteComment}
+          />
         ))}
       </div>
     </div>

@@ -1,4 +1,11 @@
-import { api } from "./api";
+/**
+ * Comment Service
+ * 
+ * Comment ile ilgili tüm API çağrılarını yöneten service. CRUD işlemleri
+ * ve beğeni işlemleri içerir.
+ */
+
+import { api } from "../shared/api";
 
 const withAuth = true;
 
@@ -22,8 +29,12 @@ export const CommentService = {
     // DELETE /api/comments/:id
     return api.delete(`/comments/${commentId}`, { withAuth });
   },
+
+  async likeComment(commentId) {
+    // POST /api/comments/:commentId/like (auth)
+    return api.post(`/comments/${commentId}/like`, null, { withAuth });
+  },
 };
 
 export default CommentService;
-
 

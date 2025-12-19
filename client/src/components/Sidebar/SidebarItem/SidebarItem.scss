@@ -1,6 +1,10 @@
 @import "../../../styles/variables";
 
 .sidebar-item {
+  &__link {
+    text-decoration: none;
+    color: inherit;
+  }
   transition: 0.4s;
 
   &__category {

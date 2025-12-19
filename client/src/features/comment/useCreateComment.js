@@ -1,9 +1,16 @@
+/**
+ * useCreateComment Hook
+ * 
+ * Yeni comment oluşturma işlemini yöneten custom hook. Form validation,
+ * API çağrısı ve error handling içerir.
+ */
+
 import { useCallback, useState } from "react";
-import { CommentService } from "../services/CommentService";
-import { mapCommentFromApi } from "../mappers/commentMapper";
+import { CommentService } from "./CommentService";
+import { mapCommentFromApi } from "./commentMapper";
 
 export function useCreateComment(postId) {
-  const [submitting, setSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
   const create = useCallback(
@@ -14,7 +21,7 @@ export function useCreateComment(postId) {
       if (!clean) return null;
 
       try {
-        setSubmitting(true);
+        setIsSubmitting(true);
         const created = await CommentService.createComment(postId, { text: clean });
         return mapCommentFromApi(created);
       } catch (err) {
@@ -22,7 +29,7 @@ export function useCreateComment(postId) {
         setError(msg);
         throw err;
       } finally {
-        setSubmitting(false);
+        setIsSubmitting(false);
       }
     },
     [postId]
@@ -30,7 +37,8 @@ export function useCreateComment(postId) {
 
   const resetError = useCallback(() => setError(null), []);
 
-  return { create, submitting, error, resetError };
+  return { create, isSubmitting, error, resetError };
 }
 
 export default useCreateComment;
+
