@@ -2,6 +2,26 @@
 import User from "../models/User.js"
 import Post from "../models/Post.js"
 
+//=========================
+// Kullanıcı Profil Bilgileri
+//=========================
+
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({
+      message: "Kullanıcı bilgileri alınamadı",
+      error: err.message,
+    });
+  }
+};
 
 export const getUserStatsAndPosts = async (req, res) => {
   try {
@@ -16,19 +36,6 @@ export const getUserStatsAndPosts = async (req, res) => {
   }
 }
 
-export const getLikedPosts = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const user = await User.findById(userId).populate("likedPosts");
-    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
-
-    res.json(user.likedPosts);
-
-  } catch (error) {
-    res.status(500).json({ message: "Bir hata oluştu", error: error.message });
-  }
-};
-
 export const getSavedPosts = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -36,18 +43,6 @@ export const getSavedPosts = async (req, res) => {
     if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
 
     res.json(user.savedPosts);
-
-  } catch (error) {
-    res.status(500).json({ message: "Bir hata oluştu", error: error.message });
-  }
-};
-
-export const getMyPosts = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const posts = await Post.find({ author: userId });
-    
-    res.json(posts); 
 
   } catch (error) {
     res.status(500).json({ message: "Bir hata oluştu", error: error.message });

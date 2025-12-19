@@ -8,7 +8,7 @@
 import "./CommentList.scss";
 import CommentCard from "./CommentCard/CommentCard.jsx";
 import CommentForm from "./CommentForm/CommentForm.jsx";
-import { useAuth } from "../../features/user";
+import { useAuth } from "../../hooks/useAuth";
 
 function CommentList({ comments = [], postId, onAddComment, onDeleteComment }) {
   const isLoggedIn = useAuth();

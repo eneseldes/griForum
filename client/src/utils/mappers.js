@@ -1,26 +1,24 @@
 /**
- * Post Mapper
+ * Data Mappers
  * 
- * Backend'den gelen raw post verilerini frontend formatına dönüştüren mapper.
- * Editor.js content'ini plain text'e çevirir, excerpt oluşturur ve
- * görsel URL'lerini düzenler.
+ * Backend'den gelen raw verilerini frontend formatına dönüştüren mapper fonksiyonları.
+ * Tüm entity'ler için (Post, Comment, User) mapping işlemleri burada toplanmıştır.
  */
 
-import { editorJsToPlainText } from "../../utils/editorUtils";
-import { DEFAULT_IMAGE } from "../../constants/config";
+import { editorJsToPlainText } from "./editorUtils";
+import { DEFAULT_IMAGE, DEFAULT_AVATAR } from "../constants/config";
+
+// ==================== POST MAPPERS ====================
 
 const getImageUrl = (images) => {
   if (!Array.isArray(images) || images.length === 0) return DEFAULT_IMAGE;
   const first = images[0];
-  // Eğer backend zaten tam URL dönüyorsa direkt kullan
   if (first.startsWith("http://") || first.startsWith("https://")) {
     return first;
   }
-  // Public klasöründen çek (relative path)
   if (first.startsWith("/")) {
     return first;
   }
-  // Relative path olarak döndür
   return `/${first}`;
 };
 
@@ -28,8 +26,6 @@ export const mapPostFromApi = (rawPost) => {
   if (!rawPost) return null;
 
   const createdAt = rawPost.createdAt ? new Date(rawPost.createdAt) : null;
-
-  // Editor.js content'ini plain text'e çevir ve excerpt oluştur
   const plainText = editorJsToPlainText(rawPost.content);
   const excerpt = editorJsToPlainText(rawPost.content, 150);
 
@@ -39,10 +35,8 @@ export const mapPostFromApi = (rawPost) => {
     content: rawPost.content,
     category: rawPost.category,
     image: getImageUrl(rawPost.images),
-    // UI için kısa özet (ilk 150 kelime)
     excerpt: excerpt || "No content available",
     date: createdAt ? createdAt.toLocaleDateString() : "",
-    // Post detail route'u ile eşleşecek şekilde
     link: `/post/${rawPost._id}`,
     authorName: rawPost.author?.username || "Unknown",
     authorId: rawPost.author?._id || rawPost.author?.id || rawPost.author,
@@ -56,5 +50,33 @@ export const mapPostFromApi = (rawPost) => {
 export const mapPostsFromApi = (rawPosts) => {
   if (!Array.isArray(rawPosts)) return [];
   return rawPosts.map(mapPostFromApi);
+};
+
+// ==================== COMMENT MAPPERS ====================
+
+export const mapCommentFromApi = (rawComment) => {
+  if (!rawComment) return null;
+
+  const createdAt = rawComment.createdAt ? new Date(rawComment.createdAt) : null;
+
+  return {
+    id: rawComment._id,
+    text: rawComment.text,
+    username: rawComment.author?.username || "Unknown",
+    authorId: rawComment.author?._id || rawComment.author?.id || rawComment.author,
+    avatar:
+      rawComment.author?.profilePicture ||
+      rawComment.author?.avatar ||
+      DEFAULT_AVATAR,
+    date: createdAt ? createdAt.toLocaleDateString() : "",
+    likes: Array.isArray(rawComment.likes) ? rawComment.likes : [],
+    likesCount: Array.isArray(rawComment.likes) ? rawComment.likes.length : 0,
+    raw: rawComment,
+  };
+};
+
+export const mapCommentsFromApi = (rawComments) => {
+  if (!Array.isArray(rawComments)) return [];
+  return rawComments.map(mapCommentFromApi);
 };
 

@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
-import { getUserIdFromToken } from "../shared";
-
 /**
- * Hook for managing authentication state
- * Tracks login status and updates when token changes
- * @returns {boolean} isLoggedIn - Whether user is logged in
+ * useAuth Hook
+ * 
+ * Authentication state yönetimi. Login durumunu takip eder.
  */
+
+import { useState, useEffect } from "react";
+import { getUserIdFromToken } from "../api/client";
+
 export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -15,10 +16,8 @@ export function useAuth() {
       setIsLoggedIn(!!userId);
     };
 
-    // İlk kontrol
     checkLoginStatus();
 
-    // localStorage değişikliklerini dinle (farklı tab'lar için)
     const handleStorageChange = (e) => {
       if (e.key === "token") {
         checkLoginStatus();
@@ -27,14 +26,12 @@ export function useAuth() {
 
     window.addEventListener("storage", handleStorageChange);
     
-    // Custom event için listener (aynı tab'da token değişiklikleri için)
     const handleCustomStorageChange = () => {
       checkLoginStatus();
     };
     
     window.addEventListener("tokenChanged", handleCustomStorageChange);
 
-    // Periyodik kontrol (aynı tab'da token değişikliklerini yakalamak için)
     const interval = setInterval(checkLoginStatus, 1000);
 
     return () => {
@@ -46,4 +43,6 @@ export function useAuth() {
 
   return isLoggedIn;
 }
+
+export default useAuth;
 

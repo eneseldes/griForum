@@ -8,12 +8,12 @@
 import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import CustomButton from "../../CustomButton/CustomButton.jsx";
-import { useCreateComment } from "../../../features/comment";
+import { useComment } from "../../../hooks/useComment";
 import "./CommentForm.scss";
 
 function CommentForm({ postId, onAddComment }) {
   const [comment, setComment] = useState("");
-  const { create, isSubmitting, error, resetError } = useCreateComment(postId);
+  const { create, isSubmitting, error, resetError } = useComment(postId);
 
   const handleSubmit = async (e) => {
     if (e && typeof e.preventDefault === "function") e.preventDefault();

@@ -16,16 +16,17 @@ import { FaRegClock } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar/Sidebar.jsx";
-import { usePostDetail, usePostInteractions, PostService } from "../../features/post";
+import { usePost } from "../../hooks/usePost";
+import { postService } from "../../services/postService";
 import { handleApiError } from "../../utils/errorHandler";
+import { showSuccess } from "../../utils/toast";
 import { DEFAULT_AVATAR } from "../../constants/config";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function PostDetailPage() {
   const navigate = useNavigate();
-  const { post, comments, setComments, loading, error, postId } = usePostDetail();
-  const { isOwner: isPostOwner, hasUserLiked, likeCount, setHasUserLiked, setLikeCount } = usePostInteractions(post);
+  const { post, comments, setComments, isLoading: loading, error, postId, isOwner: isPostOwner, hasUserLiked, likeCount, setHasUserLiked, setLikeCount } = usePost();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   if (loading && !post) {
@@ -118,7 +119,8 @@ function PostDetailPage() {
               onClose={() => setShowDeleteDialog(false)}
               onConfirm={async () => {
                 try {
-                  await PostService.deletePost(postId);
+                  await postService.deletePost(postId);
+                  showSuccess("Gönderi başarıyla silindi!");
                   navigate("/");
                 } catch (error) {
                   handleApiError(error, navigate, "Failed to delete post. Please try again.");

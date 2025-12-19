@@ -8,7 +8,7 @@
 import { useState, useRef } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import { CATEGORIES_ARRAY } from "../../constants/categories";
-import { useCreatePost } from "../../features/post";
+import { usePostForm } from "../../hooks/usePostForm";
 import Editor from "./Editor/Editor";
 import "./CreatePostPage.scss";
 
@@ -16,12 +16,12 @@ function CreatePostPage() {
   const editorRef = useRef(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
-  const { createPost, isSubmitting } = useCreatePost();
+  const { submitPost, isSubmitting } = usePostForm();
 
   return (
     <div className="create-post-page">
       <div className="container">
-        <form onSubmit={(e) => { e.preventDefault(); createPost(title, category, editorRef); }}>
+        <form onSubmit={(e) => { e.preventDefault(); submitPost(title, category, editorRef); }}>
           <div className="page-actions">
             <button
               type="submit"

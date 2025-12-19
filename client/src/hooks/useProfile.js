@@ -1,23 +1,20 @@
 /**
  * useProfile Hook
  * 
- * Kullanıcı profil verilerini yöneten custom hook. Kullanıcı bilgilerini,
- * kullanıcının post'larını, beğendiği post'ları fetch eder ve profil
- * güncelleme işlemini yönetir.
+ * Kullanıcı profil verilerini yöneten hook. Kullanıcı bilgilerini
+ * fetch eder ve profil güncelleme işlemini yönetir.
+ * Not: Post listeleri için usePosts hook'unu kullanın (type: 'my' veya 'liked')
  */
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserService } from "./UserService";
-import { mapPostsFromApi } from "../post/postMapper";
-import { handleApiError } from "../../utils/errorHandler";
-import { showError } from "../../utils/toast";
+import { userService } from "../services/userService";
+import { handleApiError } from "../utils/errorHandler";
+import { showError, showSuccess } from "../utils/toast";
 
 export function useProfile() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [myPosts, setMyPosts] = useState([]);
-  const [likedPosts, setLikedPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -25,15 +22,8 @@ export function useProfile() {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
-        const [userData, myPostsData, likedPostsData] = await Promise.all([
-          UserService.getMe(),
-          UserService.getMyPosts().catch(() => []),
-          UserService.getLikedPosts().catch(() => []),
-        ]);
-
+        const userData = await userService.getMe();
         setUser(userData);
-        setMyPosts(mapPostsFromApi(myPostsData));
-        setLikedPosts(mapPostsFromApi(likedPostsData));
       } catch (error) {
         handleApiError(error, navigate, "Failed to load profile data.");
       } finally {
@@ -60,10 +50,11 @@ export function useProfile() {
         payload.password = password.trim();
       }
 
-      const response = await UserService.updateProfile(payload);
+      const response = await userService.updateProfile(payload);
       
       if (response) {
         setUser(response.user || response);
+        showSuccess("Profil başarıyla güncellendi!");
         return true;
       }
       return false;
@@ -75,7 +66,7 @@ export function useProfile() {
     }
   };
 
-  return { user, myPosts, likedPosts, isLoading, isSubmitting, updateProfile };
+  return { user, isLoading, isSubmitting, updateProfile };
 }
 
 export default useProfile;

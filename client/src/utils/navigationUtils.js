@@ -5,7 +5,7 @@
  * yardımcı fonksiyonlar.
  */
 
-import { getUserIdFromToken } from "../features/shared";
+import { getUserIdFromToken } from "../api/client";
 
 /**
  * Kullanıcı giriş yapmışsa authenticatedRoute'a, yapmamışsa unauthenticatedRoute'a yönlendirir

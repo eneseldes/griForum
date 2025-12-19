@@ -10,12 +10,12 @@ import { useNavigate } from "react-router-dom";
 import "./HomePage.scss";
 import PostList from "../../components/PostList/PostList.jsx";
 import CustomButton from "../../components/CustomButton/CustomButton.jsx";
-import { usePostsWithPagination } from "../../features/post";
+import { usePosts } from "../../hooks/usePosts";
 import { navigateWithAuth } from "../../utils/navigationUtils";
 
 function HomePage() {
   const navigate = useNavigate();
-  const { posts, isLoading, isLoadingMore, error, hasMore, loadMore } = usePostsWithPagination();
+  const { posts, isLoading, isLoadingMore, error, hasMore, loadMore } = usePosts({ pagination: true });
 
   return (
     <div className="home-page">

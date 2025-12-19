@@ -5,26 +5,39 @@
  * ve sahip kullanıcı için silme butonu içerir.
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./CommentCard.scss";
 import "../../LikeButton/LikeButton.jsx";
 import LikeButton from "../../LikeButton/LikeButton.jsx";
 import CustomButton from "../../CustomButton/CustomButton.jsx";
 import ConfirmDialog from "../../ConfirmDialog/ConfirmDialog.jsx";
 import { FaTrash } from "react-icons/fa";
-import { useCommentInteractions, CommentService } from "../../../features/comment";
+import { commentService } from "../../../services/commentService";
+import { hasUserLiked as checkUserLiked, isUserOwner, getLikeCount } from "../../../utils/helpers";
 import { handleApiError } from "../../../utils/errorHandler";
+import { showSuccess } from "../../../utils/toast";
 import { DEFAULT_AVATAR } from "../../../constants/config";
 import { useNavigate } from "react-router-dom";
 
 function CommentCard({ comment = {}, onDelete }) {
   const navigate = useNavigate();
-  const { isOwner: isCommentOwner, hasUserLiked, likeCount, setHasUserLiked, setLikeCount } = useCommentInteractions(comment);
+  const [hasUserLikedState, setHasUserLiked] = useState(false);
+  const [likeCountState, setLikeCount] = useState(0);
+  const [isCommentOwner, setIsCommentOwner] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  useEffect(() => {
+    if (comment) {
+      setHasUserLiked(checkUserLiked(comment.likes));
+      setLikeCount(getLikeCount(comment.likes, comment.likesCount));
+      setIsCommentOwner(isUserOwner(comment.authorId));
+    }
+  }, [comment]);
 
   const handleDeleteComment = async () => {
     try {
-      await CommentService.deleteComment(comment.id);
+      await commentService.deleteComment(comment.id);
+      showSuccess("Yorum başarıyla silindi!");
       if (onDelete) {
         onDelete(comment.id);
       }
@@ -47,8 +60,8 @@ function CommentCard({ comment = {}, onDelete }) {
         <LikeButton
           type="comment"
           id={comment.id}
-          hasUserLiked={hasUserLiked}
-          likeCount={likeCount}
+          hasUserLiked={hasUserLikedState}
+          likeCount={likeCountState}
           onLikeChange={(newLiked, newCount) => {
             setHasUserLiked(newLiked);
             setLikeCount(newCount);

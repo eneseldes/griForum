@@ -1,16 +1,12 @@
 /**
- * Shared API Utilities
+ * API Client
  * 
  * Merkezi API client. Tüm HTTP istekleri için ortak fonksiyonlar sağlar.
  * JWT token yönetimi, header oluşturma, error handling ve response parsing içerir.
- * getUserIdFromToken fonksiyonu ile JWT token'dan user ID çıkarır.
  */
 
-import { API_BASE_URL } from "../../constants/config";
-import { logError } from "../../utils/logger";
-
-// Re-export for backward compatibility
-export { API_BASE_URL };
+import { API_BASE_URL } from "../constants/config";
+import { logError } from "../utils/logger";
 
 const getAuthToken = () => {
   if (typeof window === "undefined") return null;
@@ -23,11 +19,9 @@ export const getUserIdFromToken = () => {
   if (!token) return null;
   
   try {
-    // JWT token formatı: header.payload.signature
     const payload = token.split('.')[1];
     if (!payload) return null;
     
-    // Base64 decode
     const decoded = JSON.parse(atob(payload));
     return decoded.id || null;
   } catch (error) {
@@ -60,7 +54,6 @@ async function request(path, options = {}) {
     headers: buildHeaders(extraHeaders, withAuth),
   };
 
-  // body null veya undefined ise gönderme (POST/PUT/PATCH için boş body göndermek backend'de sorun yaratabilir)
   if (body !== undefined && body !== null) {
     config.body = JSON.stringify(body);
   }
@@ -75,14 +68,12 @@ async function request(path, options = {}) {
   try {
     if (isJson) {
       const text = await response.text();
-      // Boş response veya "null" string kontrolü
       if (!text || text.trim() === "" || text.trim() === "null") {
         data = null;
       } else {
         try {
           data = JSON.parse(text);
         } catch (parseError) {
-          // JSON parse hatası durumunda
           logError("JSON parse error:", parseError);
           data = { message: "Invalid JSON response", raw: text };
         }

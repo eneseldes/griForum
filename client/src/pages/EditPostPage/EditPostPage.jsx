@@ -10,7 +10,8 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPaperPlane } from "react-icons/fa";
 import { CATEGORIES_ARRAY } from "../../constants/categories";
-import { usePostDetail, useUpdatePost } from "../../features/post";
+import { usePost } from "../../hooks/usePost";
+import { usePostForm } from "../../hooks/usePostForm";
 import { handleApiError } from "../../utils/errorHandler";
 import { logError } from "../../utils/logger";
 import Editor from "../CreatePostPage/Editor/Editor";
@@ -18,8 +19,8 @@ import "./EditPostPage.scss";
 
 function EditPostPage() {
   const navigate = useNavigate();
-  const { post, loading: isLoading, error, postId } = usePostDetail();
-  const { updatePost, isSubmitting } = useUpdatePost(postId);
+  const { post, isLoading, error, postId } = usePost();
+  const { submitPost, isSubmitting } = usePostForm(postId);
   const editorRef = useRef(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -62,7 +63,7 @@ function EditPostPage() {
   return (
     <div className="edit-post-page">
       <div className="container">
-        <form onSubmit={(e) => { e.preventDefault(); updatePost(title, category, editorRef); }}>
+        <form onSubmit={(e) => { e.preventDefault(); submitPost(title, category, editorRef); }}>
           <div className="page-actions">
             <button
               type="submit"

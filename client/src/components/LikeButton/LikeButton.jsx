@@ -8,9 +8,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
-import { PostService } from "../../features/post";
-import { CommentService } from "../../features/comment";
-import { getUserIdFromToken } from "../../features/shared";
+import { postService } from "../../services/postService";
+import { commentService } from "../../services/commentService";
+import { getUserIdFromToken } from "../../api/client";
 import { handleApiError } from "../../utils/errorHandler";
 import { logError } from "../../utils/logger";
 
@@ -50,7 +50,7 @@ function LikeButton({
     try {
       let response;
       if (type === "post") {
-        response = await PostService.likePost(id);
+        response = await postService.likePost(id);
         // Backend response: { liked: boolean, likeCount: number }
         if (response && response.liked !== undefined && typeof response.likeCount === "number") {
           setLiked(response.liked);
@@ -65,7 +65,7 @@ function LikeButton({
           logError("Invalid response from likePost:", response);
         }
       } else if (type === "comment") {
-        response = await CommentService.likeComment(id);
+        response = await commentService.likeComment(id);
         // Backend response: comment object with likes array
         if (response && Array.isArray(response.likes)) {
           const userId = getUserIdFromToken();

@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
-import { useAuth } from "../../features/user";
+import { useAuth } from "../../hooks/useAuth";
 import { navigateWithAuth } from "../../utils/navigationUtils";
 
 function Navbar() {

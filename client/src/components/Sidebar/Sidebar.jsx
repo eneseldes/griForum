@@ -9,11 +9,11 @@ import { useState } from "react";
 import "./Sidebar.scss";
 import SidebarItem from "./SidebarItem/SidebarItem.jsx";
 import { CATEGORIES_ARRAY } from "../../constants/categories.js";
-import { useSidebarPosts } from "../../features/post";
+import { usePosts } from "../../hooks/usePosts";
 
 function Sidebar() {
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const { posts, isLoading } = useSidebarPosts(selectedCategory);
+  const { posts, isLoading } = usePosts({ category: selectedCategory, limit: 7 });
 
   const handleCategoryClick = (category) => {
     // Aynı kategoriye tekrar tıklanırsa filtreyi kaldır

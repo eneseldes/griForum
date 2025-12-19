@@ -10,11 +10,15 @@ import { useState, useEffect } from "react";
 import PostList from "../../components/PostList/PostList.jsx";
 import CustomButton from "../../components/CustomButton/CustomButton.jsx";
 import ConfirmDialog from "../../components/ConfirmDialog/ConfirmDialog.jsx";
-import { useProfile } from "../../features/user";
+import { useProfile } from "../../hooks/useProfile";
+import { usePosts } from "../../hooks/usePosts";
 import "./ProfilePage.scss";
 
 function ProfilePage() {
-  const { user, myPosts, likedPosts, isLoading, isSubmitting, updateProfile } = useProfile();
+  const { user, isLoading: userLoading, isSubmitting, updateProfile } = useProfile();
+  const { posts: myPosts, isLoading: myPostsLoading } = usePosts({ type: 'shared' });
+  const { posts: likedPosts, isLoading: likedPostsLoading } = usePosts({ type: 'liked' });
+  const isLoading = userLoading || myPostsLoading || likedPostsLoading;
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
 
   // Form state

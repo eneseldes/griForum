@@ -359,3 +359,52 @@ export const savePost = async (req, res) => {
     });
   }
 };
+
+//=========================
+// Kullanıcının Postları
+//=========================
+
+export const getMyPosts = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const posts = await Post.find({ author: userId })
+      .populate("author", "username")
+      .sort({ createdAt: -1 });
+    
+    const postsWithCounts = posts.map((post) => ({
+      ...post._doc,
+      likeCount: post.likes.length,
+      saveCount: post.savedBy.length,
+    }));
+
+    res.status(200).json(postsWithCounts);
+  } catch (error) {
+    res.status(500).json({ message: "Bir hata oluştu", error: error.message });
+  }
+};
+
+//=========================
+// Kullanıcının Beğendiği Postlar
+//=========================
+
+export const getMyLikedPosts = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).populate({
+      path: "likedPosts",
+      populate: { path: "author", select: "username" }
+    });
+    
+    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+
+    const postsWithCounts = user.likedPosts.map((post) => ({
+      ...post._doc,
+      likeCount: post.likes.length,
+      saveCount: post.savedBy.length,
+    }));
+
+    res.status(200).json(postsWithCounts);
+  } catch (error) {
+    res.status(500).json({ message: "Bir hata oluştu", error: error.message });
+  }
+};
