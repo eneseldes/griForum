@@ -3,9 +3,11 @@
 .main {
   
   display: flex;
+  justify-content: center;
   flex-direction: column;
   row-gap: 20px;
   width: 800px;
+  height: 100vh;
   margin: auto;
 
   @media (max-width:800px) {

@@ -1,18 +1,11 @@
-/**
- * LikeButton Component
- * 
- * Post ve comment'ler için beğeni butonu. Optimistic update yapar, loading state yönetir
- * ve beğeni durumu değişikliklerini parent component'e callback ile bildirir.
- */
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
-import { postService } from "../../services/postService";
-import { commentService } from "../../services/commentService";
-import { getUserIdFromToken } from "../../api/client";
+import { useAuth } from "../../contexts/useAuth";
 import { handleApiError } from "../../utils/errorHandler";
 import { logError } from "../../utils/logger";
+import { useLikePost } from "../../hooks/post/useLikePost";
+import { useLikeComment } from "../../hooks/comment/useLikeComment";
 
 import "./LikeButton.scss";
 
@@ -24,6 +17,9 @@ function LikeButton({
   onLikeChange, // callback function: (newLikedState, newLikeCount) => void
 }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { likePost } = useLikePost();
+  const { likeComment } = useLikeComment();
   const [loading, setLoading] = useState(false);
   const [liked, setLiked] = useState(hasUserLiked);
   const [count, setCount] = useState(likeCount);
@@ -48,40 +44,40 @@ function LikeButton({
     setLoading(true);
 
     try {
-      let response;
       if (type === "post") {
-        response = await postService.likePost(id);
-        // Backend response: { liked: boolean, likeCount: number }
-        if (response && response.liked !== undefined && typeof response.likeCount === "number") {
+        const response = await likePost(id);
+        // Backend response: { liked, likeCount }
+        if (
+          response &&
+          response.liked !== undefined &&
+          typeof response.likeCount === "number"
+        ) {
           setLiked(response.liked);
           setCount(response.likeCount);
           if (onLikeChange) {
             onLikeChange(response.liked, response.likeCount);
           }
         } else {
-          // Geçersiz response - optimistic update'i geri al
           setLiked(previousLiked);
           setCount(previousCount);
-          logError("Invalid response from likePost:", response);
+          logError("Invalid response from likePost hook:", response);
         }
       } else if (type === "comment") {
-        response = await commentService.likeComment(id);
-        // Backend response: comment object with likes array
-        if (response && Array.isArray(response.likes)) {
-          const userId = getUserIdFromToken();
-          const isLiked = userId && response.likes.some(
-            (likeId) => likeId.toString() === userId.toString()
-          );
+        const response = await likeComment(id);
+        if (response && typeof response.likeCount === "number") {
+          const userId = user?._id;
+          // liked bilgisi backend yerine userId + likes üzerinden hesaplanır
+          // likeComment hook'u sadece count döndürdüğü için optimistic state'i koruyoruz
+          const isLiked = !previousLiked;
           setLiked(isLiked);
-          setCount(response.likes.length);
+          setCount(response.likeCount);
           if (onLikeChange) {
-            onLikeChange(isLiked, response.likes.length);
+            onLikeChange(isLiked, response.likeCount);
           }
         } else {
-          // Geçersiz response - optimistic update'i geri al
           setLiked(previousLiked);
           setCount(previousCount);
-          logError("Invalid response from likeComment:", response);
+          logError("Invalid response from likeComment hook:", response);
         }
       }
     } catch (error) {

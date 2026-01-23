@@ -1,9 +1,3 @@
-/**
- * SidebarItem Component
- * 
- * Sidebar'da gösterilen tek bir post item'ı. Post başlığı, kategori, yazar ve tarih bilgilerini içerir.
- */
-
 import "./SidebarItem.scss";
 
 import { Link } from "react-router-dom";

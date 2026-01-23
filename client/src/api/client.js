@@ -1,116 +1,108 @@
 /**
- * API Client
+ * Merkezi API client. Axios kullanarak tüm HTTP isteklerini yönetir.
+ * JWT token yönetimi, header oluşturma, error handling otomatik olarak yapılır.
  * 
- * Merkezi API client. Tüm HTTP istekleri için ortak fonksiyonlar sağlar.
- * JWT token yönetimi, header oluşturma, error handling ve response parsing içerir.
+ * Fonksiyonlar:
+ * - api.get: GET isteği
+ * - api.post: POST isteği
+ * - api.put: PUT isteği
+ * - api.patch: PATCH isteği
+ * - api.delete: DELETE isteği
+ * 
+ * Kullanım:
+ * - Tüm service dosyalarında kullanılır
+ * - Direkt component'lerde kullanılmaz, service'ler üzerinden erişilir
  */
 
+import axios from "axios";
 import { API_BASE_URL } from "../constants/config";
 import { logError } from "../utils/logger";
 
+// LocalStorage'dan JWT token'ı okur
 const getAuthToken = () => {
   if (typeof window === "undefined") return null;
   return localStorage.getItem("token");
 };
 
-// JWT token'dan user ID'yi decode eder
-export const getUserIdFromToken = () => {
-  const token = getAuthToken();
-  if (!token) return null;
-  
-  try {
-    const payload = token.split('.')[1];
-    if (!payload) return null;
-    
-    const decoded = JSON.parse(atob(payload));
-    return decoded.id || null;
-  } catch (error) {
-    logError("Error decoding token:", error);
-    return null;
-  }
-};
+// Base URL ayarlanır
+const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+});
 
-const buildHeaders = (extraHeaders = {}, withAuth = false) => {
-  const headers = {
-    "Content-Type": "application/json",
-    ...extraHeaders,
-  };
-
-  if (withAuth) {
-    const token = getAuthToken();
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-  }
-
-  return headers;
-};
-
-async function request(path, options = {}) {
-  const { method = "GET", body, withAuth = false, headers: extraHeaders } = options;
-
-  const config = {
-    method,
-    headers: buildHeaders(extraHeaders, withAuth),
-  };
-
-  if (body !== undefined && body !== null) {
-    config.body = JSON.stringify(body);
-  }
-
-  const url = `${API_BASE_URL}${path}`;
-
-  const response = await fetch(url, config);
-  const contentType = response.headers.get("content-type");
-  const isJson = contentType && contentType.includes("application/json");
-
-  let data;
-  try {
-    if (isJson) {
-      const text = await response.text();
-      if (!text || text.trim() === "" || text.trim() === "null") {
-        data = null;
-      } else {
-        try {
-          data = JSON.parse(text);
-        } catch (parseError) {
-          logError("JSON parse error:", parseError);
-          data = { message: "Invalid JSON response", raw: text };
-        }
+// Her istekten önce çalışır. withAuth flag'i true ise token'ı header'a ekler.
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // withAuth flag'i varsa ve true ise token ekle
+    if (config.withAuth) {
+      const token = getAuthToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
-    } else {
-      const text = await response.text();
-      data = text || null;
     }
-  } catch (error) {
-    logError("Error reading response:", error);
-    data = null;
-  }
-
-  if (!response.ok) {
-    const errorMessage = 
-      (data && typeof data === 'object' && data.message) 
-        ? data.message 
-        : (data && typeof data === 'string' 
-          ? data 
-          : `API request failed with status ${response.status}`);
+    // withAuth flag'ini config'den kaldır (axios'a gönderilmemeli)
+    delete config.withAuth;
     
-    const error = new Error(errorMessage);
-    error.status = response.status;
-    error.data = data;
-    throw error;
+    // null body'yi undefined'a çevir (axios bunu atlar ve serialization hatası önlenir)
+    if (config.data === null) {
+      config.data = undefined;
+    }
+    
+    // Content-Type header'ını sadece body olan istekler için ekle
+    // GET ve DELETE istekleri için body olmadığından Content-Type eklenmez
+    const methodsWithBody = ['post', 'put', 'patch'];
+    const hasBody = config.data !== undefined;
+    
+    if (methodsWithBody.includes(config.method?.toLowerCase()) && hasBody) {
+      config.headers['Content-Type'] = 'application/json';
+    }
+    
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
+);
 
-  return data;
-}
+// Her response'dan sonra çalışır. Hata durumlarını handle eder.
+axiosInstance.interceptors.response.use(
+  (response) => {
+    // Başarılı response'u direkt döndür
+    return response.data;
+  },
+  (error) => {
+    // Axios error objesi
+    const errorMessage =
+      error.response?.data?.message ||
+      error.message ||
+      "An error occurred. Please try again.";
 
+    // Hata objesini standartlaştır
+    const customError = new Error(errorMessage);
+    customError.status = error.response?.status;
+    customError.data = error.response?.data;
+
+    logError("API Error:", customError);
+    throw customError;
+  }
+);
+
+// Frontendde yapılacak HTTP method'ları için kısayol fonksiyonlar sağlar
 export const api = {
-  get: (path, options) => request(path, { ...options, method: "GET" }),
-  post: (path, body, options) => request(path, { ...options, method: "POST", body }),
-  put: (path, body, options) => request(path, { ...options, method: "PUT", body }),
-  patch: (path, body, options) => request(path, { ...options, method: "PATCH", body }),
-  delete: (path, options) => request(path, { ...options, method: "DELETE" }),
+  get: (path, options = {}) => {
+    return axiosInstance.get(path, options);
+  },
+  post: (path, body, options = {}) => {
+    return axiosInstance.post(path, body, options);
+  },
+  put: (path, body, options = {}) => {
+    return axiosInstance.put(path, body, options);
+  },
+  patch: (path, body, options = {}) => {
+    return axiosInstance.patch(path, body, options);
+  },
+  delete: (path, options = {}) => {
+    return axiosInstance.delete(path, options);
+  },
 };
 
 export default api;
-

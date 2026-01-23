@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/database.js";
-import { createTestUser } from "./config/createTestUser.js";
 import path from "path";
 import adminRouter from "./routes/adminRoutes.js";
 import authRouter from "./routes/authRoutes.js";
@@ -39,9 +38,6 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Connect DB
 await connectDB();
-
-// Otomatik test user oluştur ve token üret
-await createTestUser();
 
 // Route mounts
 app.use("/api/admin", adminRouter);

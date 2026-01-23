@@ -1,7 +1,11 @@
 /**
- * Auth Service
+ * Fonksiyonlar:
+ * - login: Kullanıcı girişi yapar
+ * - register: Yeni kullanıcı kaydı oluşturur
  * 
- * Authentication ile ilgili API çağrılarını yöneten service.
+ * Kullanım:
+ * - Login ve register sayfalarında kullanılır
+ * - Hook'lar (useAuth) içinde kullanılır
  */
 
 import { api } from "../api/client";

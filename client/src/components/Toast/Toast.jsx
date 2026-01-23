@@ -1,10 +1,3 @@
-/**
- * Toast Component
- * 
- * Toast notification component'i. Kullanıcıya bilgi, başarı, hata veya uyarı mesajları gösterir.
- * Belirli bir süre sonra otomatik olarak kapanır veya kullanıcı tıklayarak kapatabilir.
- */
-
 import { useEffect } from "react";
 import "./Toast.scss";
 

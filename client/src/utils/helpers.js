@@ -1,40 +1,30 @@
 /**
- * Helper Functions
+ * Genel amaçlı yardımcı fonksiyonlar.
+ * Interaction utilities (beğeni, sahiplik kontrolü) ve form validation fonksiyonları.
  * 
- * Genel yardımcı fonksiyonlar. Interaction utilities ve diğer ortak fonksiyonlar.
+ * Fonksiyonlar:
+ * - hasUserLiked: Kullanıcının bir öğeyi beğenip beğenmediğini kontrol eder
+ * - isUserOwner: Kullanıcının bir öğenin sahibi olup olmadığını kontrol eder
+ * - getLikeCount: Beğeni sayısını hesaplar
+ * - validatePost: Post form validasyonu yapar
+ * - extractEditorContent: Editor.js içeriğini çıkarır
  */
 
-import { getUserIdFromToken } from "../api/client";
-
-/**
- * Checks if user has liked an item (post or comment)
- */
-export const hasUserLiked = (likes) => {
-  const userId = getUserIdFromToken();
+export const hasUserLiked = (likes, userId) => {
   if (!userId || !Array.isArray(likes)) return false;
-  return likes.some((likeId) => likeId.toString() === userId);
+  return likes.some((likeId) => likeId.toString() === userId.toString());
 };
 
-/**
- * Checks if user is the owner of an item
- */
-export const isUserOwner = (authorId) => {
-  const userId = getUserIdFromToken();
+export const isUserOwner = (authorId, userId) => {
   if (!userId || !authorId) return false;
   return authorId.toString() === userId.toString();
 };
 
-/**
- * Gets like count from likes array or likesCount property
- */
 export const getLikeCount = (likes, likesCount) => {
   if (typeof likesCount === "number") return likesCount;
   return Array.isArray(likes) ? likes.length : 0;
 };
 
-/**
- * Validates post form data
- */
 export const validatePost = (title, category, editorRef, showError) => {
   if (!title.trim()) {
     showError("Please enter a title");
@@ -54,9 +44,6 @@ export const validatePost = (title, category, editorRef, showError) => {
   return true;
 };
 
-/**
- * Extracts content from Editor.js
- */
 export const extractEditorContent = async (editorRef, showError) => {
   const outputData = await editorRef.current.save();
   

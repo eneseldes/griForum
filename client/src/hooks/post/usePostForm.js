@@ -1,17 +1,32 @@
 /**
- * usePostForm Hook
- * 
  * Post oluşturma ve güncelleme işlemlerini yönetir.
  * Create ve update işlemleri tek hook'ta birleştirilmiştir.
+ *
+ * Özellikler:
+ * - Form validasyonu (başlık, kategori, içerik kontrolü)
+ * - Editor.js içeriğini çıkarma
+ * - API çağrısı yapma
+ * - Başarılı işlem sonrası yönlendirme
+ * - Hata yönetimi
+ *
+ * Döndürdüğü Değerler:
+ * - submitPost: Post gönderme fonksiyonu
+ * - isSubmitting: Gönderiliyor mu? (boolean)
+ *
+ * Parametreler:
+ * - postId: Post ID'si (varsa update, yoksa create)
+ *
+ * Kullanım:
+ * - CreatePostPage ve EditPostPage component'lerinde kullanılır
+ * - Örnek: const { submitPost, isSubmitting } = usePostForm(postId);
  */
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postService } from "../services/postService";
-import { mapPostFromApi } from "../utils/mappers";
-import { handleApiError } from "../utils/errorHandler";
-import { validatePost, extractEditorContent } from "../utils/helpers";
-import { showError, showSuccess } from "../utils/toast";
+import { postService } from "../../services/postService";
+import { handleApiError } from "../../utils/errorHandler";
+import { validatePost, extractEditorContent } from "../../utils/helpers";
+import { showError, showSuccess } from "../../utils/toast";
 
 export function usePostForm(postId = null) {
   const navigate = useNavigate();
@@ -37,14 +52,17 @@ export function usePostForm(postId = null) {
         category: category,
       };
 
-      const rawResponse = postId
+      // Service'ler zaten mapped data döndürüyor
+      const mappedPost = postId
         ? await postService.updatePost(postId, payload)
         : await postService.createPost(payload);
 
-      const mappedPost = mapPostFromApi(rawResponse.post || rawResponse);
-
       if (mappedPost && mappedPost.id) {
-        showSuccess(postId ? "Gönderi başarıyla güncellendi!" : "Gönderi başarıyla oluşturuldu!");
+        showSuccess(
+          postId
+            ? "Gönderi başarıyla güncellendi!"
+            : "Gönderi başarıyla oluşturuldu!"
+        );
         navigate(`/post/${mappedPost.id}`);
         return mappedPost;
       } else {
@@ -52,7 +70,11 @@ export function usePostForm(postId = null) {
         return null;
       }
     } catch (error) {
-      handleApiError(error, navigate, `Failed to ${postId ? 'update' : 'create'} post. Please try again.`);
+      handleApiError(
+        error,
+        navigate,
+        `Failed to ${postId ? "update" : "create"} post. Please try again.`
+      );
       return null;
     } finally {
       setIsSubmitting(false);
@@ -63,4 +85,5 @@ export function usePostForm(postId = null) {
 }
 
 export default usePostForm;
+
 

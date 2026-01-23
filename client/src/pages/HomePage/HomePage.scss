@@ -1,68 +1,31 @@
 @import "../../styles/variables";
-.landing-page {
-  background-color: $color-bg-secondary;
-  width: 100%;
-  padding: 100px 100px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 
-  .landing-content {
+.home-page {
+  .landing-page {
+    height: 100vh;
+    background-color: $color-bg-secondary;
+    padding-block: $space-xl;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     row-gap: 10px;
-    width: 900px;
-
-    @media (max-width: 800px) {
-      width: 500px;
-    }
-
-    h1 {
-      font-size: 42px;
+  
+    &__title {
+      font-size: 2.5rem;
       font-weight: 800;
-      @media (max-width: 800px) {
-        font-size: 30px;
-      }
     }
+  
     p {
-      font-size: 18px;
-      @media (max-width:800px) {
-        font-size: 14px;            
-        }
-    }
-    .landing-button {
-      background-color: $color-primary;
-      color: white;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 600;
-      padding: 15px;
-      border-radius: 5px;
-      width: 200px;
-      transition: all 0.3s ease-in-out;
-
-      @media (max-width:800px) {
-            width: 150px;
-            font-size: 13px;
-            
-        }
-
-      &:hover {
-        background-color: #3d35c9;
-      }
-      &:active {
-        transform: scale(0.95);
-      }
+      font-size: 1.2rem;
     }
   }
 
-  &__load-more {
-    text-align: center;
-    margin-top: 2rem;
+  &__posts {
+    &__load-more {
+      width: 120px;
+      margin: 1rem auto 0;
+    }
   }
 }

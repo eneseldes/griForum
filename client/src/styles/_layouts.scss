@@ -1,12 +1,6 @@
 @import "./variables";
 
-.container {
-  max-width: 1200px;
-  margin-block: $space-lg;
-  padding-inline: $space-xl;
-}
-
 .section {
-  margin-block: $space-xl;
-  padding-block: $space-lg;
+  margin-bottom: 5rem;
+  padding-inline: $space-xl;
 }

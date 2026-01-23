@@ -1,35 +1,38 @@
-/**
- * CreatePostPage Component
- * 
- * Yeni post oluşturma sayfası. Başlık, kategori seçimi ve Editor.js ile
- * içerik oluşturma formu içerir. useCreatePost hook'u ile post oluşturur.
- */
-
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaPaperPlane } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { CATEGORIES_ARRAY } from "../../constants/categories";
-import { usePostForm } from "../../hooks/usePostForm";
+import { usePostForm } from "../../hooks/post/usePostForm";
+import CustomButton from "../../components/CustomButton/CustomButton";
 import Editor from "./Editor/Editor";
 import "./CreatePostPage.scss";
 
 function CreatePostPage() {
+  const navigate = useNavigate();
   const editorRef = useRef(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const { submitPost, isSubmitting } = usePostForm();
 
   return (
-    <div className="create-post-page">
-      <div className="container">
-        <form onSubmit={(e) => { e.preventDefault(); submitPost(title, category, editorRef); }}>
+    <div className="create-post-page container">
+        <form className="create-post-form" onSubmit={(e) => { e.preventDefault(); submitPost(title, category, editorRef); }}>
           <div className="page-actions">
-            <button
+            <CustomButton
+              label="Ana Sayfaya Dön"
+              onClick={() => navigate("/")}
+              variant="success"
+              icon={<FaHome />}
+            />
+            <CustomButton
+              label={isSubmitting ? "Publishing..." : "Publish"}
               type="submit"
-              className="publish-btn"
+              variant="default"
+              icon={<FaPaperPlane />}
               disabled={isSubmitting}
-            >
-              <FaPaperPlane /> {isSubmitting ? "Publishing..." : "Publish"}
-            </button>
+              loading={isSubmitting}
+            />
           </div>
 
           <div className="title-wrap">
@@ -64,7 +67,6 @@ function CreatePostPage() {
             <Editor ref={editorRef} />
           </section>
         </form>
-      </div>
     </div>
   );
 }

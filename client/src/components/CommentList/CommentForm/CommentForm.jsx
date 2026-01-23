@@ -1,19 +1,12 @@
-/**
- * CommentForm Component
- * 
- * Yeni yorum eklemek için form component'i. Textarea ve submit butonu içerir.
- * useCreateComment hook'unu kullanarak yorum oluşturur ve parent component'e callback ile bildirir.
- */
-
 import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import CustomButton from "../../CustomButton/CustomButton.jsx";
-import { useComment } from "../../../hooks/useComment";
+import { useCreateComment } from "../../../hooks/comment/useCreateComment";
 import "./CommentForm.scss";
 
 function CommentForm({ postId, onAddComment }) {
   const [comment, setComment] = useState("");
-  const { create, isSubmitting, error, resetError } = useComment(postId);
+  const { create, isSubmitting, error, resetError } = useCreateComment(postId);
 
   const handleSubmit = async (e) => {
     if (e && typeof e.preventDefault === "function") e.preventDefault();

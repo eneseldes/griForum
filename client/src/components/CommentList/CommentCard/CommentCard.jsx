@@ -1,10 +1,3 @@
-/**
- * CommentCard Component
- * 
- * Tek bir yorumu gösteren component. Yorum içeriği, yazar bilgisi, avatar, beğeni butonu
- * ve sahip kullanıcı için silme butonu içerir.
- */
-
 import { useState, useEffect } from "react";
 import "./CommentCard.scss";
 import "../../LikeButton/LikeButton.jsx";
@@ -12,15 +5,14 @@ import LikeButton from "../../LikeButton/LikeButton.jsx";
 import CustomButton from "../../CustomButton/CustomButton.jsx";
 import ConfirmDialog from "../../ConfirmDialog/ConfirmDialog.jsx";
 import { FaTrash } from "react-icons/fa";
-import { commentService } from "../../../services/commentService";
 import { hasUserLiked as checkUserLiked, isUserOwner, getLikeCount } from "../../../utils/helpers";
-import { handleApiError } from "../../../utils/errorHandler";
-import { showSuccess } from "../../../utils/toast";
 import { DEFAULT_AVATAR } from "../../../constants/config";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../contexts/useAuth";
+import { useDeleteComment } from "../../../hooks/comment/useDeleteComment";
 
 function CommentCard({ comment = {}, onDelete }) {
-  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { deleteComment, isDeleting } = useDeleteComment();
   const [hasUserLikedState, setHasUserLiked] = useState(false);
   const [likeCountState, setLikeCount] = useState(0);
   const [isCommentOwner, setIsCommentOwner] = useState(false);
@@ -28,21 +20,17 @@ function CommentCard({ comment = {}, onDelete }) {
 
   useEffect(() => {
     if (comment) {
-      setHasUserLiked(checkUserLiked(comment.likes));
+      const userId = user?._id;
+      setHasUserLiked(checkUserLiked(comment.likes, userId));
       setLikeCount(getLikeCount(comment.likes, comment.likesCount));
-      setIsCommentOwner(isUserOwner(comment.authorId));
+      setIsCommentOwner(isUserOwner(comment.authorId, userId));
     }
-  }, [comment]);
+  }, [comment, user]);
 
   const handleDeleteComment = async () => {
-    try {
-      await commentService.deleteComment(comment.id);
-      showSuccess("Yorum başarıyla silindi!");
-      if (onDelete) {
-        onDelete(comment.id);
-      }
-    } catch (error) {
-      handleApiError(error, navigate, "Failed to delete comment. Please try again.");
+    const success = await deleteComment(comment.id);
+    if (success && onDelete) {
+      onDelete(comment.id);
     }
   };
 
@@ -73,6 +61,7 @@ function CommentCard({ comment = {}, onDelete }) {
             onClick={() => setShowDeleteDialog(true)}
             variant="danger"
             icon={<FaTrash />}
+            disabled={isDeleting}
           />
         )}
       </div>

@@ -1,17 +1,9 @@
-/**
- * ProfilePage Component
- * 
- * Kullanıcı profil sayfası. Kullanıcı bilgilerini gösterir, username ve password
- * güncelleme formu içerir. Kullanıcının oluşturduğu post'ları ve beğendiği
- * post'ları listeler.
- */
-
 import { useState, useEffect } from "react";
 import PostList from "../../components/PostList/PostList.jsx";
 import CustomButton from "../../components/CustomButton/CustomButton.jsx";
 import ConfirmDialog from "../../components/ConfirmDialog/ConfirmDialog.jsx";
-import { useProfile } from "../../hooks/useProfile";
-import { usePosts } from "../../hooks/usePosts";
+import { useProfile } from "../../hooks/user/useProfile";
+import { usePosts } from "../../hooks/post/usePosts";
 import "./ProfilePage.scss";
 
 function ProfilePage() {

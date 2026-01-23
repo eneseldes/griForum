@@ -1,10 +1,3 @@
-/**
- * ToastContainer Component
- * 
- * Toast notification state'ini yöneten container component. Toast utility'den
- * state değişikliklerini dinler ve Toast component'ini render eder.
- */
-
 import { useState, useEffect } from "react";
 import Toast from "../Toast/Toast";
 import { subscribe, hideToast } from "../../utils/toast";

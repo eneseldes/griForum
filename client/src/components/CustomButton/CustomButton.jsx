@@ -1,10 +1,3 @@
-/**
- * CustomButton Component
- * 
- * Yeniden kullanılabilir buton component'i. Farklı variant'lar (default, success, danger),
- * icon desteği, loading state ve form submission desteği sağlar.
- */
-
 import "./CustomButton.scss";
 
 function CustomButton({
@@ -15,13 +8,15 @@ function CustomButton({
   icon = null, // React icon component
   type = null, // "button", "submit", "reset" - if provided, renders as button element
   loading = false, // External loading state
+  className: extraClassName = "", // Extra className for custom styling
 }) {
   const handleClick = () => {
     if (disabled || loading || !onClick) return;
     onClick();
   };
 
-  const className = `custom-button custom-button--${variant} ${loading ? 'loading' : ''} ${disabled ? 'disabled' : ''}`;
+  const baseClassName = `custom-button custom-button--${variant} ${loading ? 'loading' : ''} ${disabled ? 'disabled' : ''}`;
+  const className = extraClassName ? `${baseClassName} ${extraClassName}` : baseClassName;
   const content = (
     <>
       {icon && <span className="custom-button__icon">{icon}</span>}

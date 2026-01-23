@@ -1,20 +1,20 @@
 /**
- * Error Handling Utilities
- * 
  * API hatalarını merkezi olarak yöneten fonksiyonlar.
- * 401 hatalarında otomatik login sayfasına yönlendirme yapar
+ * 401 (Unauthorized) hatalarında otomatik olarak login sayfasına yönlendirme yapar
  * ve kullanıcıya toast notification ile hata mesajı gösterir.
+ * 
+ * Fonksiyonlar:
+ * - handleApiError: API hatasını işler, 401'de login'e yönlendirir, toast gösterir
+ * - getErrorMessage: API hatasından mesaj çıkarır, 401'de login'e yönlendirir
+ * 
+ * Kullanım:
+ * - Tüm API çağrılarında catch bloklarında kullanılır
+ * - Hata yönetimini merkezileştirir, kod tekrarını önler
  */
 
 import { logError } from "./logger";
 import { showError } from "./toast";
 
-/**
- * Centralized error handling utility
- * @param {Error} error - Error object from API
- * @param {Function} navigate - React Router navigate function
- * @param {string} defaultMessage - Default error message
- */
 export const handleApiError = (error, navigate, defaultMessage = "An error occurred. Please try again.") => {
   logError("API Error:", error);
 
@@ -33,13 +33,6 @@ export const handleApiError = (error, navigate, defaultMessage = "An error occur
   showError(errorMessage);
 };
 
-/**
- * Handle API error and return error message
- * @param {Error} error - Error object from API
- * @param {Function} navigate - React Router navigate function
- * @param {string} defaultMessage - Default error message
- * @returns {string} Error message
- */
 export const getErrorMessage = (error, navigate, defaultMessage = "An error occurred. Please try again.") => {
   if (error.status === 401 && navigate) {
     navigate("/login");

@@ -1,15 +1,20 @@
 /**
- * Centralized logging utility
- * In production, console.error can be disabled or sent to a logging service
+ * Merkezi loglama sistemi. Geliştirme ortamında console'a yazdırır,
+ * production ortamında loglama servisine gönderilebilir.
+ * 
+ * Fonksiyonlar:
+ * - logError: Hata mesajlarını loglar (console.error)
+ * - logWarning: Uyarı mesajlarını loglar (console.warn)
+ * - logInfo: Bilgi mesajlarını loglar (console.log)
+ * 
+ * Özellikler:
+ * - Sadece development ortamında çalışır (production'da sessiz)
+ * - Merkezi loglama yönetimi sağlar
+ * - Production'da loglama servisine entegre edilebilir
  */
 
 const isDevelopment = import.meta.env.DEV;
 
-/**
- * Log error messages
- * @param {string} message - Error message
- * @param {Error|object} error - Error object or additional data
- */
 export const logError = (message, error = null) => {
   if (isDevelopment) {
     if (error) {
@@ -22,11 +27,6 @@ export const logError = (message, error = null) => {
   // Example: sendToLoggingService(message, error);
 };
 
-/**
- * Log warning messages
- * @param {string} message - Warning message
- * @param {object} data - Additional data
- */
 export const logWarning = (message, data = null) => {
   if (isDevelopment) {
     if (data) {
@@ -37,11 +37,6 @@ export const logWarning = (message, data = null) => {
   }
 };
 
-/**
- * Log info messages
- * @param {string} message - Info message
- * @param {object} data - Additional data
- */
 export const logInfo = (message, data = null) => {
   if (isDevelopment) {
     if (data) {

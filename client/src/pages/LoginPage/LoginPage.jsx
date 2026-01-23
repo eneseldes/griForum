@@ -2,38 +2,40 @@ import "./LoginPage.scss";
 import { FaCheckCircle, FaEye, FaEyeSlash } from "react-icons/fa";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // Link'i de ekledim
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../../contexts/useAuth";
+import { showError, showSuccess } from "../../utils/toast";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { login, isLoading } = useAuth();
 
-  // 1. INPUT VERİLERİ
+  // Form state
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  // 2. VERİ YAKALAMA
+  // Input değişikliklerini yakala
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  // 3. GİRİŞ BAŞARILI
-  const handleLoginSuccess = (data) => {
-    console.log("Giriş Başarılı:", data);
+  // Login işlemi
+  const handleLogin = async () => {
+    if (!formData.email || !formData.password) {
+      showError("Email ve şifre gereklidir");
+      return;
+    }
 
-    // Token ve User'ı kaydet
-    // authController login yanıt yapısına göre: [cite: 109-117]
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-
-    // Anasayfaya git ve yenile
-    window.location.href = "/";
-  };
-
-  // 4. GİRİŞ HATALI
-  const handleLoginError = (error) => {
-    alert("Giriş başarısız: " + error);
+    const result = await login(formData.email, formData.password);
+    
+    if (result.success) {
+      showSuccess("Giriş başarılı!");
+      navigate("/");
+    } else {
+      showError(result.message || "Giriş başarısız");
+    }
   };
 
   return (
@@ -43,7 +45,6 @@ function LoginPage() {
       </div>
 
       <div className="email-section">
-        {/* Form etiketine gerek yok, div yeterli */}
         <label htmlFor="email">Email</label>
         <div className="email-form">
           <input
@@ -77,14 +78,11 @@ function LoginPage() {
       </div>
 
       <div className="button-section">
-        {/* DÜZELTİLMİŞ CUSTOM BUTTON */}
         <CustomButton
-          label="Login"
-          path="/auth/login"              // Backend Login Rotası
-          method="POST"                   // Veri gönderme tipi
-          body={formData}                 // Email ve Şifre paketi
-          onSuccess={handleLoginSuccess}  // Başarılı olursa çalışacak fonk.
-          onError={handleLoginError}      // Hata olursa çalışacak fonk.
+          label={isLoading ? "Giriş yapılıyor..." : "Login"}
+          onClick={handleLogin}
+          disabled={isLoading}
+          loading={isLoading}
         />
       </div>
 

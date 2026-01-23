@@ -12,7 +12,7 @@ const generateToken = (user) => {
       role: user.role,
     },
     process.env.JWT_SECRET,
-    { expiresIn: "7d" }
+    { expiresIn: "7d" } // Token 7 gün geçerli
   );
 };
 
@@ -27,16 +27,28 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "Tüm alanlar zorunludur" });
     }
 
-    const exists = await User.findOne({ email });
-    if (exists) {
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
       return res.status(400).json({ message: "Bu email zaten kayıtlı" });
     }
 
-    // Şifre kaydetme
+    // Username'in zaten kayıtlı olup olmadığını kontrol et
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists) {
+      return res.status(400).json({ message: "Bu kullanıcı adı zaten kayıtlı" });
+    }
+
+    /**
+     * Yeni Kullanıcı Oluşturma
+     * 
+     * User modeli ile yeni kullanıcı oluşturulur.
+     * Şifre hash'lenmeden kaydedilir (production'da bcrypt kullanılmalı).
+     * Varsayılan rol: "user"
+     */
     const user = await User.create({
       username,
       email,
-      password,
+      password, // Production'da hash'lenmeli (bcrypt)
       role: "user",
     });
 
@@ -48,7 +60,7 @@ export const register = async (req, res) => {
         email: user.email,
         role: user.role,
       },
-      token: generateToken(user),
+      token: generateToken(user), // JWT token oluştur ve gönder
     });
   } catch (err) {
     res.status(500).json({

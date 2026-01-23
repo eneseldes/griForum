@@ -1,51 +1,49 @@
 @import "../../styles/variables";
 
 .footer {
-  display: grid;
-  row-gap: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: $color-bg-secondary;
-  padding: 3rem $space-xl;
+  padding: 2rem $space-xl;
 
-  &__row {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+  .subtitle {
+    color: $color-primary;
+    font-weight: 700;
+    font-size: 1.5rem;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
 
-  &__left {
-    width: 40%;
-  }
-
-  &__links {
-    display: grid;
-    row-gap: $space-sm;
-    font-weight: 600;
-  }
-
-  &__socials-container {
-    display: grid;
-    row-gap: $space-sm;
+  &__description {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: $color-text-secondary;
   }
 
   &__socials {
     display: flex;
     column-gap: $space-sm;
   }
-  
+
   &__social-link {
     background-color: $color-text;
-    padding: .75rem;
+    padding: 0.7rem;
     border-radius: 50%;
+    transition: 0.4s;
+
+    &:hover {
+    }
   }
 
   &__social-icon {
     color: $color-bg;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     display: block;
     line-height: 0;
-  }
-
-  .copyrights {
-    text-align: center;
   }
 }

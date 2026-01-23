@@ -1,9 +1,20 @@
 /**
- * Editor.js JSON output'unu plain text'e çevirir
- * @param {string|object} content - Editor.js JSON string veya object
- * @param {number} maxWords - Maksimum kelime sayısı (opsiyonel)
- * @returns {string} Plain text
+ * Editor.js JSON formatındaki içeriği işlemek için yardımcı fonksiyonlar.
+ * 
+ * Fonksiyonlar:
+ * - editorJsToPlainText: Editor.js JSON'u plain text'e çevirir
+ * 
+ * Editor.js Formatı:
+ * Editor.js içerikleri JSON formatında saklanır:
+ * {
+ *   blocks: [
+ *     { type: "paragraph", data: { text: "..." } },
+ *     { type: "header", data: { text: "..." } },
+ *     ...
+ *   ]
+ * }
  */
+
 export function editorJsToPlainText(content, maxWords = null) {
   if (!content) return "";
 

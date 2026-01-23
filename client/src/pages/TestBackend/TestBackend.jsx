@@ -1,11 +1,3 @@
-/**
- * TestBackend Component
- * 
- * Backend API'lerini test etmek için geliştirme aracı. Post, comment, user
- * ve admin endpoint'lerini test edebilir, token yönetimi yapabilir.
- * Not: Bu component sadece development ortamında kullanılmalıdır.
- */
-
 import { useState, useEffect } from 'react';
 import { CATEGORIES_ARRAY } from '../../constants/categories.js';
 

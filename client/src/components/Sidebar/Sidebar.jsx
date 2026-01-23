@@ -1,15 +1,8 @@
-/**
- * Sidebar Component
- * 
- * Ana sayfanın yan tarafında gösterilen sidebar. En popüler post'ları listeler ve
- * kategori filtreleme butonları içerir. Kategori seçildiğinde post'lar filtrelenir.
- */
-
 import { useState } from "react";
 import "./Sidebar.scss";
 import SidebarItem from "./SidebarItem/SidebarItem.jsx";
 import { CATEGORIES_ARRAY } from "../../constants/categories.js";
-import { usePosts } from "../../hooks/usePosts";
+import { usePosts } from "../../hooks/post/usePosts";
 
 function Sidebar() {
   const [selectedCategory, setSelectedCategory] = useState(null);

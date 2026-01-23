@@ -1,7 +1,8 @@
 @import "../../styles/variables";
 
 .custom-button {
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
   align-items: center;
   column-gap: 0.5rem;
   background-color: $color-primary;
@@ -9,6 +10,7 @@
   font-size: 1rem;
   font-weight: 600;
   padding: 0.5rem 1rem;
+  min-height: 2.5rem;
   border-radius: $radius-md;
   cursor: pointer;
   user-select: none;
@@ -25,17 +27,9 @@
     }
   }
 
-  &:hover {
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.38);
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-  
   &:hover:not(.loading) {
-    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.38);
+    transform: scale(1.01);
   }
 
   &.loading {
@@ -47,7 +41,6 @@
     background-color: #10b981; // green-500
     box-shadow: 0 6px 16px rgba(16, 185, 129, 0.28);
     &:hover:not(.loading) {
-      background-color: #059669; // green-600
       box-shadow: 0 8px 20px rgba(16, 185, 129, 0.38);
     }
   }
@@ -56,7 +49,6 @@
     background-color: #ef4444; // red-500
     box-shadow: 0 6px 16px rgba(239, 68, 68, 0.28);
     &:hover:not(.loading) {
-      background-color: #dc2626; // red-600
       box-shadow: 0 8px 20px rgba(239, 68, 68, 0.38);
     }
   }

@@ -1,8 +1,21 @@
 /**
- * Data Mappers
- * 
- * Backend'den gelen raw verilerini frontend formatına dönüştüren mapper fonksiyonları.
+ * Backend'den gelen ham (raw) verilerini frontend formatına dönüştüren mapper fonksiyonları.
  * Tüm entity'ler için (Post, Comment, User) mapping işlemleri burada toplanmıştır.
+ * 
+ * Neden Gerekli:
+ * - Backend MongoDB'den gelen veriler frontend formatından farklı olabilir
+ * - _id -> id dönüşümü
+ * - Tarih formatlaması (Date -> string)
+ * - Editor.js JSON'dan plain text çıkarma
+ * - Görsel URL'lerini düzenleme
+ * - Like/comment sayılarını hesaplama
+ * 
+ * Fonksiyonlar:
+ * - mapPostFromApi: Tek post'u frontend formatına dönüştürür
+ * - mapPostsFromApi: Post array'ini frontend formatına dönüştürür
+ * - mapCommentFromApi: Tek yorumu frontend formatına dönüştürür
+ * - mapCommentsFromApi: Yorum array'ini frontend formatına dönüştürür
+ * - getImageUrl: Görsel URL'ini düzenler (internal helper)
  */
 
 import { editorJsToPlainText } from "./editorUtils";
@@ -21,6 +34,7 @@ const getImageUrl = (images) => {
   }
   return `/${first}`;
 };
+
 
 export const mapPostFromApi = (rawPost) => {
   if (!rawPost) return null;
@@ -79,4 +93,3 @@ export const mapCommentsFromApi = (rawComments) => {
   if (!Array.isArray(rawComments)) return [];
   return rawComments.map(mapCommentFromApi);
 };
-

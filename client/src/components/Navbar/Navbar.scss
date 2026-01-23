@@ -3,14 +3,17 @@
 .show-menu {
   right: 0 !important;
 }
-/* yapılacaklar 
-    3 çizgiye başta none var 
-    media ile belli seviyeye gelince dışarı taşsın onu getir 
-*/
+
 .navbar {
+  position: fixed;
+  width: 100%;
+  background-color: $color-bg;
+  z-index: 100;
   display: flex;
   justify-content: space-between;
-  padding: 10px 10% 10px 10%;
+  align-items: center;
+  padding: 10px 10%;
+  box-shadow: 0 0 10px rgba(41, 41, 41, 0.1);
 
   &__left {
     .navbar__logo {
@@ -27,85 +30,95 @@
   }
 
   &__right {
-    display: flex;
-    align-items: center;
-    column-gap: 30px;
-    
-    ul {
-      display: flex;
-      list-style: none;
-      column-gap: 30px;
-    }
-
-    button {
-      opacity: 0;
-      @media (max-width: 800px) {
-        opacity: 1;
-        z-index: 99;
-      }
-    }
-
-    &__seeus {
-      background-color: $color-primary;
-      border-radius: $radius-md;
-    }
-
     &__menu {
       display: flex;
-      column-gap: 30px;
+      align-items: center;
+      column-gap: 1rem;
 
-      //   position: absolute;
-      //   right: -100%;
-      //   top: 500px;
+      .navbar-links {
+        display: flex;
+        list-style: none;
+        column-gap: 0.1rem;
 
-      /* Logout Butonu Stili */
-      .logout-btn {
-        opacity: 1 !important;
-        background-color: black; /* Arka planı siyah yap (Görünmesi için) */
-        color: white; /* Yazıyı beyaz yap */
-        border: 1px solid black; /* Çerçeve */
-        padding: 8px 16px; /* İç boşluk (Butonu şişmanlatır) */
-        border-radius: 5px; /* Köşeleri yuvarlat */
-        cursor: pointer; /* Üstüne gelince el işareti çıksın */
-        font-weight: bold; /* Yazı kalın olsun */
-        font-size: 14px; /* Yazı boyutu */
-        margin-left: 10px; /* Yanındaki isimden biraz uzaklaşsın */
-        transition: all 0.3s ease; /* Renk değişimini yumuşat */
+        .navbar-link {
+          padding: 0.6rem 1.2rem;
+          border-radius: $radius-md;
+          transition: 0.4s;
 
-        
-      }
-
-      @media (max-width: 800px) {
-        position: absolute;
-        right: -100%;
-      }
-
-      &.__show-menu {
-        @media (max-width: 800px) {
-          display: flex;
-          flex-direction: column;
-          right: 0;
-          top: 0;
-          gap: 10px;
-          width: 40%;
-          height: 100vh;
-          box-shadow: 0 0 5px rgba(0, 0, 0, 0.266);
-          padding: 2rem;
-          background-color: white;
-
-          ul {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+          &:hover {
+            background-color: $color-bg-secondary;
           }
         }
+      }
 
-        // position: static; // relative left right etkilemez absolute için base sağlar ama absolute diye dışardan müdahele etmeden önce base hali static
-        // right: 0%;
-        // top: 0px;
-        // position: absolute;
-        // right: -100%;
-        // top: 500px;
+      .navbar__logout {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        border-radius: $radius-md;
+        border: none;
+        background-color: transparent;
+        color: $color-text;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.4s;
+
+        &:hover {
+          background-color: $color-bg-secondary;
+        }
+
+        svg {
+          font-size: 1rem;
+        }
+
+        span {
+          font-weight: 500;
+        }
+      }
+    }
+
+    &__close {
+      display: none;
+    }
+
+    &__hamburger {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      &__menu {
+        position: fixed;
+        z-index: 100;
+        flex-direction: column;
+        align-items: start;
+        right: -100%;
+        top: 0;
+        gap: 10px;
+        width: 60%;
+        height: 100vh;
+        box-shadow: 0 0 10px rgba(41, 41, 41, 0.1);
+        padding: 4.5rem 3rem;
+        background-color: white;
+        transition: 0.4s;
+
+        .navbar-links {
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+
+      &__close {
+        display: block;
+        position: absolute;
+        top: 2rem;
+        right: 3rem;
+        font-size: 1.25rem;
+      }
+
+      &__hamburger {
+        font-size: 1.25rem;
+        display: block;
       }
     }
   }

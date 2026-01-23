@@ -1,77 +1,81 @@
-/**
- * Navbar Component
- * 
- * Uygulamanın ana navigasyon çubuğu. Logo, menü linkleri (Contact, About, Write, Profile/Sign In)
- * ve mobil hamburger menü içerir. Kullanıcı giriş durumuna göre "Sign In" veya "Profile" linki gösterir.
- */
-
 import "./Navbar.scss";
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
-import { useAuth } from "../../hooks/useAuth";
-import { navigateWithAuth } from "../../utils/navigationUtils";
+import { FaSignOutAlt } from "react-icons/fa";
+import { useAuth } from "../../contexts/useAuth";
 
 function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const isLoggedIn = useAuth();
-
-  const handleWrite = (e) => {
-    e.preventDefault();
-    navigateWithAuth(navigate, "/create-post", "/login");
-  };
-
-  const handleContact = (e) => {
-    e.preventDefault();
-    // Footer'a scroll yap
-    const footer = document.querySelector('.footer');
-    if (footer) {
-      footer.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <div className="navbar">
-      {/* SOL TARA - LOGO */}
       <div className="navbar__left">
-        <Link to="/" className="navbar__logo">griForum</Link>
+        <Link to="/" className="navbar__logo">
+          griForum
+        </Link>
       </div>
-
-      {/* SAĞ TARAF - MENÜ */}
       <div className="navbar__right">
-        <div className={`navbar__right__menu ${menuOpen ? "__show-menu" : ""}`}>
-          <ul>
-            <li>
-              <a href="" onClick={handleContact}>Contact</a>
+        <div className={`navbar__right__menu${menuOpen ? " show-menu" : ""}`}>
+          <ul className="navbar-links">
+            <li className="navbar-link-item">
+              <a
+                className="navbar-link"
+                href=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/create-post");
+                }}
+              >
+                Write
+              </a>
             </li>
-            <li>
-              <a href="">About</a>
-            </li>
-            <li>
-              <a href="" onClick={handleWrite}>Write</a>
-            </li>
-            <li>
+            <li className="navbar-link-item">
               {isLoggedIn ? (
-                <a href="/profile">Profile</a>
+                <a className="navbar-link" href="/profile">
+                  Profile
+                </a>
               ) : (
-                <a href="/login">Sign In</a>
+                <a className="navbar-link" href="/login">
+                  Sign In
+                </a>
               )}
             </li>
           </ul>
-
-          <div className="navbar__right__seeus">
-            <a className="custom-button" href="https://www.google.com/" target="_blank">Learn About Us</a>
-          </div>
-        </div>  
-
-        {/* Hamburger Menü Butonu */}
+          <a
+            className="custom-button"
+            href="https://www.google.com/"
+            target="_blank"
+          >
+            Learn About Us
+          </a>
+          {isLoggedIn && (
+            <button
+              className="navbar__logout"
+              onClick={() => {
+                logout();
+                navigate("/");
+              }}
+              title="Logout"
+            >
+              <FaSignOutAlt />
+            </button>
+          )}
+          <button
+            className="navbar__right__close"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <FaTimes />
+          </button>
+        </div>
         <button
           className="navbar__right__hamburger"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          {menuOpen ? <FaTimes /> : <FaBars />}
+          <FaBars />
         </button>
       </div>
     </div>

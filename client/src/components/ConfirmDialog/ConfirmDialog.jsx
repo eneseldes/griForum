@@ -1,10 +1,3 @@
-/**
- * ConfirmDialog Component
- * 
- * Onay dialog component'i. Kullanıcıdan kritik işlemler için onay almak için kullanılır.
- * Backdrop tıklama, ESC tuşu ve butonlarla kapatılabilir. Açıkken body scroll'unu engeller.
- */
-
 import { useEffect } from "react";
 import "./ConfirmDialog.scss";
 

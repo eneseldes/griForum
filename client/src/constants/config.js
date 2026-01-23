@@ -1,10 +1,16 @@
 /**
- * Application Configuration Constants
+ * Uygulama Konfigürasyon Sabitleri (config.js)
  * 
- * Uygulama genelinde kullanılan sabit değerler:
- * - API endpoint'leri
+ * Uygulama genelinde kullanılan sabit değerler.
+ * 
+ * İçerik:
+ * - API endpoint'leri (base URL'ler)
  * - Varsayılan görseller (avatar, post image)
  * - Kategori görselleri mapping'i
+ * 
+ * Kullanım:
+ * - Tüm component ve service'lerde import edilir
+ * - Örnek: import { API_BASE_URL, DEFAULT_AVATAR } from "../constants/config";
  */
 
 // API Configuration

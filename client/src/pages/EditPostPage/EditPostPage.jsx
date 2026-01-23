@@ -1,77 +1,78 @@
 /**
  * EditPostPage Component
  * 
- * Mevcut post'u düzenleme sayfası. Post verilerini yükler, form'a doldurur
- * ve useUpdatePost hook'u ile güncelleme yapar. Editor.js'e initialData prop'u ile
- * mevcut içeriği yükler.
+ * Mevcut post'u düzenleme sayfası. Başlık, kategori seçimi ve Editor.js ile
+ * içerik düzenleme formu içerir. usePostForm hook'u ile post günceller.
  */
 
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaPaperPlane } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { CATEGORIES_ARRAY } from "../../constants/categories";
-import { usePost } from "../../hooks/usePost";
-import { usePostForm } from "../../hooks/usePostForm";
-import { handleApiError } from "../../utils/errorHandler";
-import { logError } from "../../utils/logger";
+import { usePostForm } from "../../hooks/post/usePostForm";
+import { usePost } from "../../hooks/post/usePost";
+import CustomButton from "../../components/CustomButton/CustomButton";
 import Editor from "../CreatePostPage/Editor/Editor";
 import "./EditPostPage.scss";
 
 function EditPostPage() {
   const navigate = useNavigate();
-  const { post, isLoading, error, postId } = usePost();
-  const { submitPost, isSubmitting } = usePostForm(postId);
+  const { postId } = useParams();
   const editorRef = useRef(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
-  const [initialContent, setInitialContent] = useState(null);
+  const { post, isLoading: isLoadingPost } = usePost();
+  const { submitPost, isSubmitting } = usePostForm(postId);
 
-  // Post verilerini form'a yükle
+  // Post verisi yüklendiğinde form alanlarını doldur
   useEffect(() => {
     if (post) {
-      setTitle(post.title);
-      setCategory(post.category);
-      
-      // Content'i parse et
-      let contentData = null;
-      if (post.content) {
-        try {
-          contentData = typeof post.content === "string" 
-            ? JSON.parse(post.content) 
-            : post.content;
-        } catch (error) {
-          logError("Error parsing content:", error);
-        }
-      }
-      setInitialContent(contentData);
-    } else if (error) {
-      handleApiError(error, navigate, "Failed to load post. Please try again.");
-      if (error.status === 404) {
-        navigate("/");
-      }
+      setTitle(post.title || "");
+      setCategory(post.category || "");
     }
-  }, [post, error, navigate]);
+  }, [post]);
 
-  if (isLoading && !post) {
-    return <div className="edit-post-page"><div className="container"><p>Loading post...</p></div></div>;
+  if (isLoadingPost) {
+    return (
+      <div className="edit-post-page container">
+        <div className="loading-message">Loading post...</div>
+      </div>
+    );
   }
 
-  if (error && !post) {
-    return <div className="edit-post-page"><div className="container"><p>Could not load post.</p></div></div>;
+  if (!post) {
+    return (
+      <div className="edit-post-page container">
+        <div className="error-message">Post not found</div>
+        <CustomButton
+          label="Ana Sayfaya Dön"
+          onClick={() => navigate("/")}
+          variant="success"
+          icon={<FaHome />}
+        />
+      </div>
+    );
   }
 
   return (
-    <div className="edit-post-page">
-      <div className="container">
-        <form onSubmit={(e) => { e.preventDefault(); submitPost(title, category, editorRef); }}>
+    <div className="edit-post-page container">
+        <form className="edit-post-form" onSubmit={(e) => { e.preventDefault(); submitPost(title, category, editorRef); }}>
           <div className="page-actions">
-            <button
+            <CustomButton
+              label="Ana Sayfaya Dön"
+              onClick={() => navigate("/")}
+              variant="success"
+              icon={<FaHome />}
+            />
+            <CustomButton
+              label={isSubmitting ? "Updating..." : "Update"}
               type="submit"
-              className="publish-btn"
+              variant="default"
+              icon={<FaPaperPlane />}
               disabled={isSubmitting}
-            >
-              <FaPaperPlane /> {isSubmitting ? "Updating..." : "Update"}
-            </button>
+              loading={isSubmitting}
+            />
           </div>
 
           <div className="title-wrap">
@@ -103,10 +104,9 @@ function EditPostPage() {
           </div>
 
           <section className="editor-section">
-            <Editor ref={editorRef} initialData={initialContent} />
+            <Editor ref={editorRef} initialData={post.content} />
           </section>
         </form>
-      </div>
     </div>
   );
 }

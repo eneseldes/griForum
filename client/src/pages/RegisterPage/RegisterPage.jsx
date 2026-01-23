@@ -3,28 +3,48 @@ import { FaCheckCircle } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import CustomButton from "../../components/CustomButton/CustomButton";
-import { useNavigate ,Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import React, { useState } from "react";
+import { useAuth } from "../../contexts/useAuth";
+import { showError, showSuccess } from "../../utils/toast";
+
 function RegisterPage() {
   const navigate = useNavigate();
+  const { register, isLoading } = useAuth();
 
-  // 1. INPUT VERİLERİNİ TUTAN STATE (Hook)
+  // Form state
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
-  // 2. Inputa yazılanı hafızaya kaydeden fonksiyon
+  // Input değişikliklerini yakala
   const handleChange = (e) => {
-    // e.target.id (örneğin "email") hangisiyse onun değerini güncelle
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  // 3. Kayıt başarılı olursa ne yapalım?
-  const handleSuccess = (data) => {
-    alert("Kayıt Başarılı! Giriş yapabilirsiniz.");
-    navigate("/login"); // Login sayfasına at
+  // Register işlemi
+  const handleRegister = async () => {
+    if (!formData.username || !formData.email || !formData.password) {
+      showError("Tüm alanlar gereklidir");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      showError("Şifreler eşleşmiyor");
+      return;
+    }
+
+    const result = await register(formData.email, formData.username, formData.password);
+    
+    if (result.success) {
+      showSuccess("Kayıt başarılı! Giriş yapabilirsiniz.");
+      navigate("/login");
+    } else {
+      showError(result.message || "Kayıt başarısız");
+    }
   };
 
   return (
@@ -36,13 +56,13 @@ function RegisterPage() {
       <div className="username-section">
         <form action="">
           <div className="username-form">
-            <label for="username-label">Username</label>
+            <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username" // State'teki isimle (username) aynı olmalı
               placeholder="Kullanıcı Adı"
               value={formData.username}
-              onChange={handleChange}W
+              onChange={handleChange}
             />
           </div>
         </form>
@@ -51,7 +71,7 @@ function RegisterPage() {
       <div className="email-section">
         <form action="">
           <div className="email-form">
-            <label for="signup-email">Email</label>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
@@ -71,7 +91,7 @@ function RegisterPage() {
 
         <form action="">
           <div className="password-form">
-            <label for="signup-password">Create a password</label>
+            <label htmlFor="password">Create a password</label>
             <input
               type="password"
               id="password"
@@ -88,12 +108,12 @@ function RegisterPage() {
       <div className="password-section">
         <form action="">
           <div className="password-form">
-            <label for="signup-password">Confirm password</label>
+            <label htmlFor="confirmPassword">Confirm password</label>
             <input
               type="password"
-              id="password"
-              placeholder="Şifre"
-              value={formData.password}
+              id="confirmPassword"
+              placeholder="Şifre Tekrar"
+              value={formData.confirmPassword}
               onChange={handleChange}
             />
             <FaEyeSlash className="pass-icon" />
@@ -103,14 +123,11 @@ function RegisterPage() {
       </div>
 
       <div className="button-section">
-        
         <CustomButton
-          label="Sign Up" // Buton yazısı
-          path="/auth/register" // Backend adresi (base url hariç)
-          method="POST" // Veri gönderme tipi
-          body={formData} // Gönderilecek paket (username, email, password)
-          onSuccess={handleSuccess} // Başarılı olursa çalışacak fonksiyon
-          onError={(err) => alert("Hata: " + err)} // Hata olursa
+          label={isLoading ? "Kayıt yapılıyor..." : "Sign Up"}
+          onClick={handleRegister}
+          disabled={isLoading}
+          loading={isLoading}
         />
       </div>
       <p>

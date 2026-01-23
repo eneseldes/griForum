@@ -1,8 +1,13 @@
 /**
- * API Endpoints
- * 
  * Tüm API endpoint'lerinin merkezi tanımları.
  * Endpoint'ler burada toplanarak değişikliklerin tek yerden yönetilmesi sağlanır.
+ * 
+ * Yapı:
+ * - endpoints.auth: Authentication endpoint'leri
+ * - endpoints.posts: Post endpoint'leri
+ * - endpoints.comments: Yorum endpoint'leri
+ * - endpoints.users: Kullanıcı endpoint'leri
+ * - endpoints.admin: Admin endpoint'leri
  */
 
 export const endpoints = {
@@ -40,9 +45,8 @@ export const endpoints = {
     update: "/users/update",
   },
 
-  // Admin endpoints
+  // Admin endpoints, inşallah bir gün ekleyeceğiz
   admin: {
-    // Add admin endpoints here when needed
+    
   },
 };
-
